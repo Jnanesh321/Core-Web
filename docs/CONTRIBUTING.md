@@ -143,4 +143,37 @@ A contribution is ready for merge when:
 - [ ] Documentation or comments are added where complex logic exists.
 - [ ] The PR has received review and approval.
 
+---
+
+## 📜 Audit Logging (`logAudit`) Guidelines
+
+To ensure accountability and security across privileged actions, administrative handlers must log mutations using the `logAudit` service.
+
+### When to call `logAudit`:
+1. **Role Modifications:** Whenever assigning or removing user roles (`ROLE_ASSIGNED`, `ROLE_REMOVED`).
+2. **Membership Applications:** When approving or rejecting student applications (`APPLICATION_APPROVED`, `APPLICATION_REJECTED`).
+3. **Sensitive Exports:** When downloading or exporting event participant registries or membership CSVs (`REGISTRATIONS_EXPORTED`).
+4. **Official Announcements:** When broadcasting or publishing system announcements (`ANNOUNCEMENT_PUBLISHED`).
+5. **System Settings:** When altering global site configurations or keys (`SETTING_CHANGED`).
+
+### Usage Example:
+```typescript
+import { logAudit } from "@/services/audit.service";
+import { AuditActions } from "@/types/audit";
+
+await logAudit({
+  actorId: currentUser.id,
+  action: AuditActions.APPLICATION_APPROVED,
+  entity: "MembershipApplication",
+  entityId: application.id,
+  before: { status: application.status },
+  after: { status: "APPROVED" },
+  ip: req.headers.get("x-forwarded-for"),
+});
+```
+
+> **Note:** `logAudit` automatically strips sensitive fields such as passwords, hashes, USNs, and phone numbers. It catches and handles its own errors so logging failures never break primary business logic.
+
+---
+
 Thank you for building CoRE! 🚀
