@@ -204,3 +204,49 @@ If Cells endpoints become unavailable or change schemas, only the adapter is mod
 - **Production Deployment:**
   - Fast deployments from `main` branch with automated database migration checks.
   - Automated daily backups for PostgreSQL databases.
+
+---
+
+## 🗄️ 9. Database Architecture & Schema Decisions
+
+The CoRE platform data model strictly separates public community engagement from sensitive student records by decoupling `User` (identity and credentials), `StudentProfile` (private academic records including unique USN, department, year, and phone number), and `Member` (public community profile, portfolio, bio, and verified skills). Public-facing endpoints query and serialize `Member` profiles without exposing private student records or administrative annotations. Foreign key cascades are strictly scoped to dependent child entities (such as event schedules, rules, project contributors, and member links) while protecting the core `User` record against accidental cascading deletions. Performance-critical queries on events and projects are backed by composite indexes (`[status, startAt]`, `[approvalStatus, featured]`, and `[eventId, status]`).
+
+```mermaid
+erDiagram
+    User ||--o| StudentProfile : "has (private)"
+    User ||--o| Member : "has (public)"
+    User ||--o{ UserRole : "assigned"
+    Role ||--o{ UserRole : "defines"
+    User ||--o{ Account : "auth"
+    User ||--o{ Session : "session"
+    User ||--o{ MembershipApplication : "submits"
+    User ||--o{ EventOrganizer : "organizes"
+    User ||--o{ EventRegistration : "registers"
+    User ||--o{ Attendance : "records"
+    User ||--o{ AuditLog : "acts"
+
+    Member ||--o{ MemberSkill : "possesses"
+    Skill ||--o{ MemberSkill : "categorizes"
+    Member ||--o{ MemberLink : "links"
+    Member ||--o{ ProjectContributor : "contributes"
+    Member ||--o{ AchievementMember : "earns"
+
+    Project ||--o{ ProjectContributor : "has"
+    Project ||--o{ ProjectTechnology : "uses"
+    Technology ||--o{ ProjectTechnology : "tags"
+
+    EventSeries ||--o{ Event : "contains"
+    Event ||--o{ EventScheduleItem : "schedules"
+    Event ||--o{ EventRule : "enforces"
+    Event ||--o{ EventOrganizer : "staffed_by"
+    Event ||--o{ EventRegistration : "enrolled"
+    Event ||--o{ Team : "hosts"
+    Event ||--o{ Attendance : "logs"
+    Event ||--o{ Announcement : "publishes"
+    Event ||--o{ Album : "media"
+
+    Team ||--o{ TeamMember : "includes"
+    Album ||--o{ Media : "contains"
+    Achievement ||--o{ AchievementMember : "recognizes"
+```
+

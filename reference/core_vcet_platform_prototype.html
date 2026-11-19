@@ -1,0 +1,2355 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CoRE VCET â€” Center of Research and Excellence | Puttur</title>
+  <meta name="description" content="Built by CoRE, for CoRE. Student developer & research community at Vivekananda College of Engineering & Technology (VCET), Puttur." />
+
+  <!-- Official CoRE Favicon Variants -->
+  <link rel="icon" type="image/svg+xml" href="../public/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="../public/images/logo/favicon-dark.svg" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" type="image/svg+xml" href="../public/images/logo/favicon-light.svg" media="(prefers-color-scheme: light)" />
+
+  <!-- Google Fonts: Inter & JetBrains Mono per DESIGN.md -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Custom Design Tokens matching DESIGN.md -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            void: '#0B0F17',
+            surface: {
+              1: '#111827',
+              2: '#1E293B',
+            },
+            stroke: {
+              subtle: '#1F2937',
+              default: '#374151',
+            },
+            brand: {
+              cyan: '#06B6D4',
+              blue: '#3B82F6',
+              violet: '#8B5CF6',
+              purple: '#A855F7',
+            },
+          },
+          boxShadow: {
+            'glow-cyan': '0 0 28px -6px rgba(6, 182, 212, 0.35)',
+            'glow-blue': '0 0 32px -6px rgba(59, 130, 246, 0.35)',
+            'glow-violet': '0 0 28px -6px rgba(139, 92, 246, 0.35)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* Base Obsidian Canvas & Typography */
+    :root {
+      --bg-canvas: #0B0F17;
+      --surface-1: #111827;
+      --surface-2: #1E293B;
+      --border-subtle: #1F2937;
+      --border-default: #374151;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: #F9FAFB;
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Architectural Background Grid (SVG stroke grid per Point 1 Design Lock) */
+    .bg-tech-grid {
+      background-size: 44px 44px;
+      background-image: url("data:image/svg+xml,%3Csvg width='44' height='44' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 44 0 L 0 0 0 44' fill='none' stroke='rgba(31, 41, 55, 0.38)' stroke-width='1'/%3E%3C/svg%3E");
+    }
+
+    /* Glassmorphism Navbar per DESIGN.md */
+    .glass-nav {
+      background: rgba(17, 24, 39, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(55, 65, 81, 0.55);
+    }
+
+    /* Card Surface & Hover Luminescence */
+    .core-card {
+      background-color: #111827;
+      border: 1px solid #1F2937;
+      transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 220ms cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 220ms cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 220ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .core-card:hover {
+      background-color: #151e31;
+      border-color: rgba(6, 182, 212, 0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -10px rgba(6, 182, 212, 0.16);
+    }
+
+    /* Flat Primary CTA Button per DESIGN.md & Point 1 Design Lock */
+    .btn-primary {
+      background-color: #2563EB;
+      color: #F9FAFB;
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-primary:hover {
+      background-color: #1D4ED8;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px -4px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-secondary {
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid #374151;
+      color: #F9FAFB;
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: #6B7280;
+    }
+
+    /* Flat Brand Accent Utility per Point 1 Design Lock */
+    .text-brand-accent {
+      color: #06B6D4;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0F17;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F2937;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #374151;
+    }
+
+    /* Terminal Blinking Cursor */
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 1.1s infinite;
+    }
+
+    /* Respect Reduced Motion per DESIGN.md */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-void text-gray-50 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- ===================================================================== -->
+  <!-- 1. TOP GLASSMORPHISM NAVIGATION BAR                                   -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 glass-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-18">
+        <!-- Brand Logo & VCET Puttur Monospace Tag -->
+        <a href="#home" onclick="navigateTo('home')" class="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-xl p-1">
+          <div class="w-10 h-10 rounded-xl bg-[#111827] border border-cyan-500/30 flex items-center justify-center p-2 group-hover:border-cyan-400/60 transition-colors">
+            <!-- Official CoRE Emblem SVG -->
+            <svg class="w-6 h-6 text-cyan-400 group-hover:scale-105 transition-transform" viewBox="0 0 500 500" fill="currentColor" role="img" aria-label="CoRE Logo">
+              <path d="m221.644 59.778 5.722 5.73c12.66 12.659 33.181 12.659 45.841 0l6.302-6.302c12.652-12.653 33.174-12.653 45.826 0l115.17 115.17c12.653 12.652 12.653 33.174 0 45.826l-6.302 6.302c-12.659 12.66-12.659 33.181 0 45.841l6.302 6.302c12.66 12.659 12.66 33.181 0 45.84L324.769 440.216c-12.659 12.66-33.174 12.66-45.833 0l-6.302-6.302c-12.66-12.659-33.181-12.659-45.841 0l-6.875 6.875c-12.659 12.66-33.181 12.66-45.84 0L163.2 429.904c-12.66-12.653-12.66-33.181 0-45.84l12.604-12.605c12.652-12.652 33.181-12.652 45.84 0l5.729 5.736c12.653 12.653 33.181 12.653 45.841 0l104.264-104.271c12.659-12.659 12.659-33.18 0-45.84-12.653-12.659-33.174-12.659-45.827 0l-58.437 58.438c-12.66 12.659-33.188 12.659-45.841 0l-12.031-12.032c-12.659-12.659-12.659-33.18 0-45.84l58.438-58.437c12.659-12.653 12.659-33.174 0-45.834l-.573-.573c-12.66-12.652-33.181-12.652-45.841 0L123.095 227.077c-12.659 12.66-12.659 33.181 0 45.841l6.875 6.875c12.66 12.652 12.66 33.18 0 45.84l-12.604 12.604c-12.659 12.653-33.18 12.653-45.84 0l-12.031-12.031c-12.66-12.66-12.66-33.181 0-45.841l6.875-6.875c12.659-12.659 12.659-33.18 0-45.84l-6.303-6.295c-12.652-12.659-12.652-33.174 0-45.833L175.804 59.778c12.652-12.652 33.181-12.652 45.84 0" />
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-lg tracking-tight text-white">CoRE</span>
+              <span class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/25">VCET</span>
+            </div>
+            <span class="text-[11px] text-gray-400 hidden sm:block leading-none mt-0.5">Center of Research & Excellence</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav aria-label="Primary Navigation" class="hidden lg:flex items-center gap-1">
+          <button data-nav="home" onclick="navigateTo('home')" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Home</button>
+          <button data-nav="projects" onclick="navigateTo('projects')" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Projects</button>
+          <button data-nav="events" onclick="navigateTo('events')" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Events</button>
+          <button data-nav="people" onclick="navigateTo('people')" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors">People</button>
+          <button data-nav="achievements" onclick="navigateTo('achievements')" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Achievements</button>
+          <button data-nav="gallery" onclick="navigateTo('gallery')" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Gallery</button>
+          <button data-nav="about" onclick="navigateTo('about')" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors">About</button>
+        </nav>
+
+        <!-- Right Actions: Reference Inspector + Join CoRE CTA + Mobile Hamburger -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button onclick="toggleReferenceDrawer()" title="Open Contributor & Regional Club Benchmark Notes" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-medium bg-violet-500/10 text-violet-300 border border-violet-500/30 hover:bg-violet-500/20 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></span>
+            <span>Ref Guide</span>
+          </button>
+
+          <button onclick="navigateTo('join')" class="btn-primary px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-sm min-h-[40px] flex items-center gap-1.5">
+            <span>Join CoRE</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </button>
+
+          <!-- Mobile Menu Toggle -->
+          <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle Menu" aria-expanded="false" class="lg:hidden p-2.5 rounded-xl border border-gray-700 text-gray-300 hover:text-white hover:bg-white/5 min-w-[44px] min-h-[44px] flex items-center justify-center">
+            <svg id="hamburger-icon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-gray-800 bg-[#0B0F17]/95 backdrop-blur-xl px-4 pt-3 pb-5 space-y-1">
+      <button data-nav="home" onclick="navigateTo('home'); toggleMobileMenu(false)" class="mobile-nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-200 hover:bg-white/5">Home</button>
+      <button data-nav="projects" onclick="navigateTo('projects'); toggleMobileMenu(false)" class="mobile-nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-200 hover:bg-white/5">Projects</button>
+      <button data-nav="events" onclick="navigateTo('events'); toggleMobileMenu(false)" class="mobile-nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-200 hover:bg-white/5">Events</button>
+      <button data-nav="people" onclick="navigateTo('people'); toggleMobileMenu(false)" class="mobile-nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-200 hover:bg-white/5">People</button>
+      <button data-nav="achievements" onclick="navigateTo('achievements'); toggleMobileMenu(false)" class="mobile-nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-200 hover:bg-white/5">Achievements</button>
+      <button data-nav="gallery" onclick="navigateTo('gallery'); toggleMobileMenu(false)" class="mobile-nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-200 hover:bg-white/5">Gallery</button>
+      <button data-nav="about" onclick="navigateTo('about'); toggleMobileMenu(false)" class="mobile-nav-link w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-200 hover:bg-white/5">About</button>
+      <div class="pt-2 border-t border-gray-800 flex items-center justify-between gap-2">
+        <button onclick="toggleReferenceDrawer(); toggleMobileMenu(false)" class="flex-1 px-4 py-3 rounded-xl text-xs font-mono text-violet-300 bg-violet-500/10 border border-violet-500/30 text-center">
+          Open Dev & Club Reference Guide
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- 2. LIVE ANNOUNCEMENTS STRIP (PRD Section 6.1 #3)                      -->
+  <!-- ===================================================================== -->
+  <div class="bg-[#0f1624] border-b border-gray-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2.5 overflow-hidden">
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+          LIVE
+        </span>
+        <p id="announcement-banner-text" class="text-gray-300 truncate">
+          <strong class="text-white font-semibold">Core-Web Open Source Sprint:</strong> Good First Issues for 1st & 2nd year contributors are now open on GitHub.
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+        <button onclick="cycleAnnouncement()" class="text-gray-400 hover:text-cyan-400 font-mono transition-colors">Next update <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+        <span class="text-gray-700">|</span>
+        <button onclick="navigateTo('events')" class="text-cyan-400 hover:text-cyan-300 font-medium transition-colors">CoRE Unbounded '26 <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 3. MAIN VIEWPORT CONTAINER (SPA Views Rendered Dynamically)           -->
+  <!-- ===================================================================== -->
+  <main id="app-root" class="flex-1">
+    <!-- Content populated by renderCurrentView() -->
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- 4. FOOTER (PRD Section 6.1 #12)                                       -->
+  <!-- ===================================================================== -->
+  <footer class="border-t border-gray-800/90 bg-[#080B11] mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Brand Column -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-[#111827] border border-cyan-500/30 flex items-center justify-center p-1.5 text-cyan-400">
+              <!-- Official CoRE Emblem SVG -->
+              <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 500 500" fill="currentColor" role="img" aria-label="CoRE Logo">
+                <path d="m221.644 59.778 5.722 5.73c12.66 12.659 33.181 12.659 45.841 0l6.302-6.302c12.652-12.653 33.174-12.653 45.826 0l115.17 115.17c12.653 12.652 12.653 33.174 0 45.826l-6.302 6.302c-12.659 12.66-12.659 33.181 0 45.841l6.302 6.302c12.66 12.659 12.66 33.181 0 45.84L324.769 440.216c-12.659 12.66-33.174 12.66-45.833 0l-6.302-6.302c-12.66-12.659-33.181-12.659-45.841 0l-6.875 6.875c-12.659 12.66-33.181 12.66-45.84 0L163.2 429.904c-12.66-12.653-12.66-33.181 0-45.84l12.604-12.605c12.652-12.652 33.181-12.652 45.84 0l5.729 5.736c12.653 12.653 33.181 12.653 45.841 0l104.264-104.271c12.659-12.659 12.659-33.18 0-45.84-12.653-12.659-33.174-12.659-45.827 0l-58.437 58.438c-12.66 12.659-33.188 12.659-45.841 0l-12.031-12.032c-12.659-12.659-12.659-33.18 0-45.84l58.438-58.437c12.659-12.653 12.659-33.174 0-45.834l-.573-.573c-12.66-12.652-33.181-12.652-45.841 0L123.095 227.077c-12.659 12.66-12.659 33.181 0 45.841l6.875 6.875c12.66 12.652 12.66 33.18 0 45.84l-12.604 12.604c-12.659 12.653-33.18 12.653-45.84 0l-12.031-12.031c-12.66-12.66-12.66-33.181 0-45.841l6.875-6.875c12.659-12.659 12.659-33.18 0-45.84l-6.303-6.295c-12.652-12.659-12.652-33.174 0-45.833L175.804 59.778c12.652-12.652 33.181-12.652 45.84 0" />
+              </svg>
+            </div>
+            <div>
+              <span class="font-bold text-white text-lg">CoRE VCET</span>
+              <span class="block text-xs text-gray-400">Center of Research and Excellence</span>
+            </div>
+          </div>
+          <p class="text-sm text-gray-400 max-w-md leading-relaxed">
+            A student-driven engineering and research community at <span class="text-gray-200">Vivekananda College of Engineering & Technology (VCET), Puttur</span>. Demonstrating what we build, not just describing who we are.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a href="https://github.com/core-vcet/Core-Web" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-800 hover:border-gray-700 text-xs font-mono text-gray-300 hover:text-white transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              <span>core-vcet/Core-Web</span>
+            </a>
+            <span class="text-xs font-mono text-gray-500">Nehru Nagar, Puttur, DK â€” 574203</span>
+          </div>
+        </div>
+
+        <!-- Platform Navigation -->
+        <div>
+          <h3 class="text-xs font-mono uppercase tracking-wider text-gray-400 font-semibold mb-4">Platform</h3>
+          <ul class="space-y-2.5 text-sm text-gray-400">
+            <li><button onclick="navigateTo('projects')" class="hover:text-cyan-400 transition-colors">Projects Showcase</button></li>
+            <li><button onclick="navigateTo('events')" class="hover:text-cyan-400 transition-colors">Events & Bootcamps</button></li>
+            <li><button onclick="navigateTo('people')" class="hover:text-cyan-400 transition-colors">People & Builders</button></li>
+            <li><button onclick="navigateTo('achievements')" class="hover:text-cyan-400 transition-colors">Achievements</button></li>
+            <li><button onclick="navigateTo('gallery')" class="hover:text-cyan-400 transition-colors">Community Gallery</button></li>
+          </ul>
+        </div>
+
+        <!-- Community & Contributors -->
+        <div>
+          <h3 class="text-xs font-mono uppercase tracking-wider text-gray-400 font-semibold mb-4">Community</h3>
+          <ul class="space-y-2.5 text-sm text-gray-400">
+            <li><button onclick="navigateTo('about')" class="hover:text-cyan-400 transition-colors">About & Manifesto</button></li>
+            <li><button onclick="navigateTo('join')" class="hover:text-cyan-400 transition-colors">Apply to Join CoRE</button></li>
+            <li><button onclick="toggleReferenceDrawer()" class="hover:text-violet-400 transition-colors">Contributor Reference Guide</button></li>
+            <li><a href="https://github.com/core-vcet/Core-Web/issues" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-400 transition-colors">Good First Issues <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 pt-6 border-t border-gray-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+        <p>Â© 2026 CoRE â€” Center of Research and Excellence, VCET Puttur. Open-Source under MIT License.</p>
+        <p class="font-mono text-gray-400">Built by CoRE, for CoRE â€¢ Next.js + Prisma + PostgreSQL Stack</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- 5. INTERACTIVE MODALS & REFERENCE DRAWER                              -->
+  <!-- ===================================================================== -->
+
+  <!-- Dynamic Modal Backdrop & Container -->
+  <div id="modal-backdrop" onclick="closeModalOnBackdrop(event)" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div id="modal-box" role="dialog" aria-modal="true" class="relative w-full max-w-2xl bg-[#111827] border border-gray-700 rounded-2xl shadow-2xl overflow-hidden my-8">
+      <!-- Modal Body injected via JS -->
+    </div>
+  </div>
+
+  <!-- Slide-over Contributor & Regional Club Benchmark Drawer -->
+  <aside id="reference-drawer" aria-label="Reference Prototype Guide" class="hidden fixed inset-y-0 right-0 z-50 w-full max-w-md bg-[#0f1623] border-l border-gray-800 shadow-2xl flex flex-col">
+    <div class="p-5 border-b border-gray-800 flex items-center justify-between">
+      <div>
+        <span class="text-[11px] font-mono uppercase tracking-wider text-violet-400">Prototype Reference Inspector</span>
+        <h2 class="text-base font-bold text-white">CoRE Web Design & Benchmark Notes</h2>
+      </div>
+      <button onclick="toggleReferenceDrawer(false)" class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 min-w-[40px] min-h-[40px] flex items-center justify-center" aria-label="Close Drawer"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+    </div>
+
+    <div class="p-5 overflow-y-auto space-y-6 text-sm text-gray-300 flex-1">
+      <div class="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/25">
+        <h3 class="font-semibold text-cyan-300 text-xs font-mono uppercase mb-1">Why This Reference Exists</h3>
+        <p class="text-xs text-gray-300 leading-relaxed">
+          Built as a visual & structural benchmark for CoRE contributors (Frontend, Backend, and Design) translating <code class="text-cyan-200">PRD.md</code> and <code class="text-cyan-200">DESIGN.md</code> into our Next.js + Prisma repository.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-white mb-2.5 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+          Regional Club Inspiration Matrix
+        </h3>
+        <div class="space-y-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-[#111827] border border-gray-800">
+            <div class="font-semibold text-white mb-1">1. SOSC (Sahyadri Open Source Community)</div>
+            <p class="text-gray-400">Inspired our open-source transparency: live GitHub repo links on every project card, contributor attribution, and community-owned events.</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-[#111827] border border-gray-800">
+            <div class="font-semibold text-white mb-1">2. FiniteLoop Club (NMAMIT, Nitte)</div>
+            <p class="text-gray-400">Inspired our structured project rigor, domain tracks (Web, AI/ML, Systems), peer mentorship hierarchy, and polished dark-mode showcase cards.</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-[#111827] border border-gray-800">
+            <div class="font-semibold text-white mb-1">3. DevNation (AJIET, Mangaluru)</div>
+            <p class="text-gray-400">Inspired our high-energy flagship hackathon/bootcamp presentation (<em>CoRE Unbounded</em> & <em>CoRE Unleashed</em>) and accessible student onboarding.</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-white mb-2.5 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          PRD & Design System Checklist
+        </h3>
+        <ul class="space-y-2 text-xs text-gray-400 font-mono">
+          <li class="flex items-center gap-2"><span class="text-emerald-400 shrink-0 inline-flex items-center"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span> Obsidian Void (#0B0F17) & Slate (#111827)</li>
+          <li class="flex items-center gap-2"><span class="text-emerald-400 shrink-0 inline-flex items-center"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span> "Demonstration over description" hero</li>
+          <li class="flex items-center gap-2"><span class="text-emerald-400 shrink-0 inline-flex items-center"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span> Privacy-safe People profiles (no USN/phone)</li>
+          <li class="flex items-center gap-2"><span class="text-emerald-400 shrink-0 inline-flex items-center"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span> Unified Event engine (Unbounded/Unleashed)</li>
+          <li class="flex items-center gap-2"><span class="text-emerald-400 shrink-0 inline-flex items-center"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span> Zod-style form validation & empty states</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="p-4 border-t border-gray-800 bg-[#0B0F17]">
+      <a href="https://github.com/core-vcet/Core-Web" target="_blank" rel="noopener noreferrer" class="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2">
+        <span>Explore core-vcet/Core-Web on GitHub</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" aria-live="polite" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- ===================================================================== -->
+  <!-- 6. APPLICATION STATE, MOCK DOMAIN DATA & INTERACTIVE ENGINE           -->
+  <!-- ===================================================================== -->
+  <script>
+    /* ===================================================================== */
+    /* LUCIDE SVG ICON SYSTEM (Standardized Uniform Size & Weight per Point 2) */
+    /* ===================================================================== */
+    function getIcon(name, sizeClass = 'w-4 h-4 shrink-0') {
+      const paths = {
+        'x': '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>',
+        'check': '<polyline points="20 6 9 17 4 12"></polyline>',
+        'check-circle-2': '<circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>',
+        'star': '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>',
+        'map-pin': '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle>',
+        'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
+        'search': '<circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>',
+        'arrow-right': '<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>',
+        'arrow-up-right': '<line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline>'
+      };
+      const p = paths[name] || paths['check'];
+      return `<svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+    }
+
+    /**
+     * CoRE VCET Prototype Data Store
+     * Mirrors the relational schema outlined in PRD.md & ARCHITECTURE.md
+     * (Projects, Events, Members/People, Achievements, Gallery Albums, Announcements)
+     */
+    const CORE_DATA = {
+      announcements: [
+        {
+          id: 'ann-1',
+          tag: 'OPEN SOURCE',
+          text: 'Core-Web Open Source Sprint: Good First Issues for 1st & 2nd year contributors are now open on GitHub.',
+          actionLabel: 'View Repos',
+          route: 'projects'
+        },
+        {
+          id: 'ann-2',
+          tag: 'FLAGSHIP EVENT',
+          text: 'CoRE Unbounded 2026: Annual 24-Hour Buildathon & Tech Symposium registrations are live for VCET students.',
+          actionLabel: 'Register Now',
+          route: 'events'
+        },
+        {
+          id: 'ann-3',
+          tag: 'RECRUITMENT',
+          text: 'CoRE Cohort Intake: Applications open across Frontend, Backend (Prisma/Postgres), AI/ML, and Design tracks.',
+          actionLabel: 'Apply Today',
+          route: 'join'
+        }
+      ],
+
+      projects: [
+        {
+          id: 'proj-core-web',
+          slug: 'core-web-platform',
+          title: 'Core-Web Community Platform',
+          shortDesc: 'Official open-source digital platform for CoRE VCET featuring project showcases, unified event registration, and member portfolios.',
+          fullDesc: 'Engineered collaboratively by CoRE students using Next.js App Router, TypeScript, PostgreSQL, and Prisma ORM. Built to replace static pages with a living, database-backed engineering showcase where students learn real-world PR reviews, Zod validation, and RBAC.',
+          category: 'Full-Stack Web',
+          status: 'Active Development',
+          featured: true,
+          technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Prisma', 'Zod'],
+          githubUrl: 'https://github.com/core-vcet/Core-Web',
+          liveUrl: 'https://core-vcet.vercel.app',
+          stars: 34,
+          prsMerged: 48,
+          lead: 'Jnanesh',
+          contributors: ['Jnanesh', 'Madhura', 'Akshatha', 'Abhinav', 'Dhanya', 'Vishritha'],
+          visualType: 'terminal-web'
+        },
+        {
+          id: 'proj-cells-ams',
+          slug: 'cells-academic-monitoring',
+          title: 'Cells â€” Academic & Evaluation Engine',
+          shortDesc: 'Automated academic monitoring, CO-PO attainment analytics, and structured question paper evaluation system built for VCET.',
+          fullDesc: 'Designed to streamline faculty and student academic workflows at VCET Puttur. Features modular adapter patterns, structured grading matrices, and automated analytical reporting with strict role-based data privacy.',
+          category: 'Systems & DevOps',
+          status: 'Production',
+          featured: true,
+          technologies: ['TypeScript', 'Next.js', 'PostgreSQL', 'Docker', 'Prisma'],
+          githubUrl: 'https://github.com/core-vcet',
+          liveUrl: null,
+          stars: 29,
+          prsMerged: 62,
+          lead: 'Jnanesh',
+          contributors: ['Jnanesh', 'Abhinav', 'Krishna Prasad', 'Shankar'],
+          visualType: 'analytics-grid'
+        },
+        {
+          id: 'proj-krishirent',
+          slug: 'krishirent-agritech',
+          title: 'Krishirent â€” Agri-Machinery Exchange',
+          shortDesc: 'Peer-to-peer agricultural equipment rental and scheduling platform tailored for arecanut and coconut farmers in Dakshina Kannada.',
+          fullDesc: 'Built after field research around Puttur and rural Dakshina Kannada. Connects smallholder farmers with verified tractor, tiller, and sprayer owners with transparent hourly pricing, vernacular-friendly UI, and seasonal demand forecasting.',
+          category: 'AgriTech / Social',
+          status: 'Production',
+          featured: true,
+          technologies: ['React', 'Node.js', 'PostgreSQL', 'Tailwind CSS'],
+          githubUrl: 'https://github.com/core-vcet',
+          liveUrl: 'https://krishirent-demo.vercel.app',
+          stars: 41,
+          prsMerged: 37,
+          lead: 'Akshatha',
+          contributors: ['Akshatha', 'Madhura', 'Muralikrishna', 'Niveditha'],
+          visualType: 'agritech-map'
+        },
+        {
+          id: 'proj-campus-rag',
+          slug: 'vcet-syllabus-copilot',
+          title: 'VTU / VCET Academic RAG Copilot',
+          shortDesc: 'Retrieval-Augmented Generation assistant indexing VTU scheme syllabi, lab manuals, and previous question papers with citation links.',
+          fullDesc: 'Uses hybrid vector + keyword retrieval over curated VTU Computer Science and Electronics documentation so students can query module-wise concepts with exact page citations and zero hallucinated references.',
+          category: 'AI / ML',
+          status: 'Research',
+          featured: false,
+          technologies: ['Python', 'PyTorch', 'FastAPI', 'PostgreSQL', 'Next.js'],
+          githubUrl: 'https://github.com/core-vcet',
+          liveUrl: null,
+          stars: 26,
+          prsMerged: 19,
+          lead: 'Vishritha',
+          contributors: ['Vishritha', 'Deepika', 'Niharika', 'Aarya'],
+          visualType: 'ai-neural'
+        },
+        {
+          id: 'proj-qr-attend',
+          slug: 'pulse-rotating-qr',
+          title: 'Pulse â€” Rotating QR Event Check-In',
+          shortDesc: 'Cryptographically signed rotating QR attendance verifier preventing proxy check-ins during large college workshops and hackathons.',
+          fullDesc: 'Generates time-windowed HMAC tokens every 15 seconds on the organizer screen, enabling offline-resilient mobile check-ins and instant CSV participant exports for CoRE event organizers.',
+          category: 'Systems & DevOps',
+          status: 'Active Development',
+          featured: false,
+          technologies: ['TypeScript', 'Next.js', 'Zod', 'Docker'],
+          githubUrl: 'https://github.com/core-vcet',
+          liveUrl: 'https://pulse-qr.vercel.app',
+          stars: 22,
+          prsMerged: 24,
+          lead: 'Abhinav',
+          contributors: ['Abhinav', 'Akanksha', 'Amrithalakshmi', 'Keerthana'],
+          visualType: 'qr-security'
+        },
+        {
+          id: 'proj-vision-sort',
+          slug: 'areca-grade-vision',
+          title: 'ArecaVision â€” Edge Quality Classifier',
+          shortDesc: 'Lightweight computer vision model running on edge devices to classify harvested arecanut grades for local Malnad & Coastal growers.',
+          fullDesc: 'Trained on a locally collected dataset from Puttur agricultural markets. Quantized to run smoothly on low-cost mobile browsers and Raspberry Pi setups without requiring continuous cloud connectivity.',
+          category: 'AI / ML',
+          status: 'Research',
+          featured: false,
+          technologies: ['Python', 'PyTorch', 'OpenCV', 'React'],
+          githubUrl: 'https://github.com/core-vcet',
+          liveUrl: null,
+          stars: 31,
+          prsMerged: 15,
+          lead: 'Dhanya',
+          contributors: ['Dhanya', 'Amrithalakshmi', 'Muralikrishna'],
+          visualType: 'vision-scan'
+        }
+      ],
+
+      events: [
+        {
+          id: 'evt-unbounded-26',
+          slug: 'core-unbounded-2026',
+          series: 'CoRE Unbounded',
+          isFlagship: true,
+          title: 'CoRE Unbounded 2026 â€” 24-Hour Buildathon & Tech Fest',
+          status: 'Registration Open',
+          type: 'Upcoming',
+          dateMonth: 'NOV',
+          dateDay: '28',
+          fullDate: 'November 28â€“29, 2026 â€¢ 09:30 AM IST',
+          venue: 'VCET Main Auditorium & CoRE Innovation Lab',
+          capacity: 160,
+          registered: 134,
+          teamSize: '2â€“4 Members',
+          summary: 'CoREâ€™s flagship annual product-building marathon. Ship working full-stack, AI, or hardware-integrated prototypes solving real regional and campus problems in 24 hours.',
+          schedule: [
+            { time: '09:30 AM', title: 'Opening Keynote & Problem Track Reveal' },
+            { time: '11:00 AM', title: 'Hacking Sprint Begins + Architecture Mentoring' },
+            { time: '08:30 PM', title: 'Midnight Code Review & Checkpoint 1' },
+            { time: '10:30 AM (Day 2)', title: 'Live Demo Jury & Open Community Showcase' }
+          ],
+          rules: [
+            'All code must be written during the 24-hour window in a public or jury-shared Git repository.',
+            'Open-source libraries and AI coding assistants are permitted; pre-built complete projects are disqualified.',
+            'At least one working live deployment or local functional demo is mandatory for final evaluation.'
+          ]
+        },
+        {
+          id: 'evt-unleashed-26',
+          slug: 'core-unleashed-fullstack',
+          series: 'CoRE Unleashed',
+          isFlagship: true,
+          title: 'CoRE Unleashed: Full-Stack Next.js & PostgreSQL Bootcamp',
+          status: 'Registration Open',
+          type: 'Upcoming',
+          dateMonth: 'DEC',
+          dateDay: '12',
+          fullDate: 'December 12, 2026 â€¢ 02:00 PM â€“ 05:30 PM',
+          venue: 'CSE Seminar Hall, VCET Puttur',
+          capacity: 90,
+          registered: 71,
+          teamSize: 'Individual (Bring Laptop)',
+          summary: 'Hands-on engineering workshop led by Core-Web maintainers. Go from zero to a validated REST Route Handler connected to PostgreSQL via Prisma ORM.',
+          schedule: [
+            { time: '02:00 PM', title: 'Git Fork-Branch-PR Workflow & TypeScript Essentials' },
+            { time: '03:00 PM', title: 'Designing Relational Schemas with Prisma & Postgres' },
+            { time: '04:15 PM', title: 'Building & Testing GET /api/projects with Zod' }
+          ],
+          rules: [
+            'Install Node.js v20+ and Git prior to the session.',
+            'Participants who complete the live lab PR earn a verified contributor badge on their CoRE profile.'
+          ]
+        },
+        {
+          id: 'evt-git-sprint',
+          slug: 'hacktober-vcet-sprint',
+          series: 'Community Sprint',
+          isFlagship: false,
+          title: 'Open-Source Issue Triage & First PR Night',
+          status: 'Upcoming',
+          type: 'Upcoming',
+          dateMonth: 'DEC',
+          dateDay: '20',
+          fullDate: 'December 20, 2026 â€¢ 04:15 PM â€“ 06:30 PM',
+          venue: 'CoRE Lab, Block B',
+          capacity: 50,
+          registered: 32,
+          teamSize: 'Individual',
+          summary: 'Guided peer-programming evening dedicated to 1st and 2nd year students making their first merged pull request to core-vcet/Core-Web.',
+          schedule: [
+            { time: '04:15 PM', title: 'Issue Walkthrough with Frontend & Backend Leads' },
+            { time: '04:45 PM', title: 'Paired Coding & Live PR Reviews' }
+          ],
+          rules: [
+            'Open to all VCET students regardless of prior open-source experience.'
+          ]
+        },
+        {
+          id: 'evt-past-unleashed-25',
+          slug: 'core-unleashed-linux-docker',
+          series: 'CoRE Unleashed',
+          isFlagship: true,
+          title: 'CoRE Unleashed â€™25: Linux Internals & Docker Containers',
+          status: 'Completed',
+          type: 'Past',
+          dateMonth: 'OCT',
+          dateDay: '14',
+          fullDate: 'October 14, 2026 â€¢ Completed',
+          venue: 'VCET Central Computing Center',
+          capacity: 110,
+          registered: 110,
+          teamSize: 'Individual',
+          summary: '110 students containerized multi-service Node + Postgres apps from scratch and deployed live services on self-hosted Linux servers.',
+          schedule: [
+            { time: '02:00 PM', title: 'Linux Process Isolation & Namespaces' },
+            { time: '03:30 PM', title: 'Writing Multi-Stage Dockerfiles & Compose' }
+          ],
+          rules: ['Archived event â€” slides and sample Dockerfiles available on CoRE GitHub.']
+        },
+        {
+          id: 'evt-past-unbounded-25',
+          slug: 'core-unbounded-2025',
+          series: 'CoRE Unbounded',
+          isFlagship: true,
+          title: 'CoRE Unbounded 2025 â€” Inaugural Builders Showcase',
+          status: 'Completed',
+          type: 'Past',
+          dateMonth: 'AUG',
+          dateDay: '22',
+          fullDate: 'August 22, 2026 â€¢ Completed',
+          venue: 'VCET Auditorium',
+          capacity: 140,
+          registered: 140,
+          teamSize: '2â€“4 Members',
+          summary: '28 student teams pitched live prototypes across AgriTech, EdTech, and Developer Tooling before industry alumni and VCET faculty.',
+          schedule: [
+            { time: '10:00 AM', title: 'Project Expo & Live Architecture Walkthroughs' },
+            { time: '03:00 PM', title: 'Jury Finale & Best Engineering Award' }
+          ],
+          rules: ['Archived event â€” winning repositories featured in Projects showcase.']
+        }
+      ],
+
+      /* Strictly adheres to PRD Section 7.1: NO private USN or phone numbers exposed */
+      members: [
+        {
+          id: 'mem-jnanesh',
+          name: 'Jnanesh',
+          github: 'core-vcet',
+          role: 'Project & Architecture Lead',
+          tracks: ['Leads', 'Backend'],
+          batch: 'Final Year â€¢ CSE',
+          bio: 'Coordinates system architecture, backend engineering, and full-stack integration across CoRE platforms and VCET Cells tooling.',
+          skills: ['TypeScript', 'Next.js', 'PostgreSQL', 'Prisma', 'System Design'],
+          projects: ['Core-Web Community Platform', 'Cells â€” Academic & Evaluation Engine'],
+          contributionsCount: 84
+        },
+        {
+          id: 'mem-madhura',
+          name: 'Madhura',
+          github: 'Madhurashastry14',
+          role: 'Frontend Co-Lead',
+          tracks: ['Leads', 'Frontend'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Co-leads UI architecture, component reusability, and responsive design execution for CoRE Web and community products.',
+          skills: ['React', 'Next.js', 'Tailwind CSS', 'TypeScript', 'UI Systems'],
+          projects: ['Core-Web Community Platform', 'Krishirent â€” Agri-Machinery Exchange'],
+          contributionsCount: 61
+        },
+        {
+          id: 'mem-akshatha',
+          name: 'Akshatha',
+          github: 'Akshatha-k2006',
+          role: 'Frontend Co-Lead',
+          tracks: ['Leads', 'Frontend'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Co-leads frontend task distribution, accessibility standards, and user-centric interfaces across CoRE web applications.',
+          skills: ['Next.js', 'React', 'Tailwind CSS', 'Accessibility', 'Figma'],
+          projects: ['Core-Web Community Platform', 'Krishirent â€” Agri-Machinery Exchange'],
+          contributionsCount: 59
+        },
+        {
+          id: 'mem-abhinav',
+          name: 'Abhinav',
+          github: 'abhinav-DROID-ng',
+          role: 'Backend & Systems Contributor',
+          tracks: ['Backend'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Focuses on API route handlers, database migrations, authentication flows, and containerized deployment tooling.',
+          skills: ['Node.js', 'PostgreSQL', 'Prisma', 'Docker', 'REST APIs'],
+          projects: ['Cells â€” Academic & Evaluation Engine', 'Pulse â€” Rotating QR Event Check-In'],
+          contributionsCount: 47
+        },
+        {
+          id: 'mem-vishritha',
+          name: 'Vishritha',
+          github: 'Vishritha07',
+          role: 'Backend & AI Contributor',
+          tracks: ['Backend'],
+          batch: '3rd Year â€¢ AIML',
+          bio: 'Builds data-backed API endpoints, Zod validation schemas, and retrieval pipelines for campus knowledge tools.',
+          skills: ['TypeScript', 'Python', 'Zod', 'PostgreSQL', 'FastAPI'],
+          projects: ['VTU / VCET Academic RAG Copilot', 'Core-Web Community Platform'],
+          contributionsCount: 42
+        },
+        {
+          id: 'mem-dhanya',
+          name: 'Dhanya',
+          github: 'Dhanyaharish',
+          role: 'Frontend & Design Contributor',
+          tracks: ['Frontend', 'Design'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Crafts interactive UI components, design tokens, and visual prototypes bridging Figma concepts to Tailwind code.',
+          skills: ['Figma', 'Tailwind CSS', 'React', 'Computer Vision', 'UI/UX'],
+          projects: ['ArecaVision â€” Edge Quality Classifier', 'Core-Web Community Platform'],
+          contributionsCount: 39
+        },
+        {
+          id: 'mem-amrithalakshmi',
+          name: 'Amrithalakshmi',
+          github: 'Amritha1806',
+          role: 'Frontend & Design Contributor',
+          tracks: ['Frontend', 'Design'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Works on responsive page layouts, design system documentation, and user flows for community showcases.',
+          skills: ['HTML/CSS', 'Tailwind CSS', 'React', 'UI Design', 'Prototyping'],
+          projects: ['Pulse â€” Rotating QR Event Check-In', 'ArecaVision â€” Edge Quality Classifier'],
+          contributionsCount: 34
+        },
+        {
+          id: 'mem-shankar',
+          name: 'Shankar',
+          github: 'shankarRBhat',
+          role: 'Frontend & Systems Developer',
+          tracks: ['Frontend'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Develops modular client components, interactive data tables, and performance optimizations for web apps.',
+          skills: ['TypeScript', 'React', 'Next.js', 'Git'],
+          projects: ['Cells â€” Academic & Evaluation Engine'],
+          contributionsCount: 31
+        },
+        {
+          id: 'mem-muralikrishna',
+          name: 'Muralikrishna',
+          github: 'Muralikrishna8731',
+          role: 'Frontend Developer',
+          tracks: ['Frontend'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Passionate about building practical web applications for local community challenges and clean state management.',
+          skills: ['JavaScript', 'React', 'Tailwind CSS', 'REST APIs'],
+          projects: ['Krishirent â€” Agri-Machinery Exchange', 'ArecaVision â€” Edge Quality Classifier'],
+          contributionsCount: 29
+        },
+        {
+          id: 'mem-niveditha',
+          name: 'Niveditha',
+          github: 'Totarniveditha',
+          role: 'Frontend Developer',
+          tracks: ['Frontend'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Contributes accessible form interfaces, event listing cards, and responsive layouts across CoRE platforms.',
+          skills: ['React', 'Tailwind CSS', 'TypeScript', 'Git'],
+          projects: ['Krishirent â€” Agri-Machinery Exchange'],
+          contributionsCount: 27
+        },
+        {
+          id: 'mem-akanksha',
+          name: 'Akanksha',
+          github: 'AkankshaSunada-coder',
+          role: 'Frontend Developer',
+          tracks: ['Frontend'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Focuses on interactive UI components, filterable directories, and clean component architecture.',
+          skills: ['JavaScript', 'React', 'Tailwind CSS', 'GitHub'],
+          projects: ['Pulse â€” Rotating QR Event Check-In'],
+          contributionsCount: 25
+        },
+        {
+          id: 'mem-keerthana',
+          name: 'Keerthana',
+          github: 'keerthanacod',
+          role: 'Frontend Developer',
+          tracks: ['Frontend'],
+          batch: '3rd Year â€¢ CSE',
+          bio: 'Builds clean UI views, navigation components, and interactive student-facing web pages.',
+          skills: ['HTML', 'Tailwind CSS', 'JavaScript', 'React'],
+          projects: ['Pulse â€” Rotating QR Event Check-In'],
+          contributionsCount: 23
+        },
+        {
+          id: 'mem-deepika',
+          name: 'Deepika',
+          github: 'MadlandaDeepika',
+          role: 'Backend & Design Contributor',
+          tracks: ['Backend', 'Design'],
+          batch: '2nd Year â€¢ CSE',
+          bio: 'Exploring relational database modeling with PostgreSQL & Prisma while contributing UI design assets.',
+          skills: ['SQL', 'Prisma', 'PostgreSQL', 'TypeScript', 'Figma'],
+          projects: ['VTU / VCET Academic RAG Copilot'],
+          contributionsCount: 16
+        },
+        {
+          id: 'mem-niharika',
+          name: 'Niharika',
+          github: 'niharika-core',
+          role: 'Backend & Design Contributor',
+          tracks: ['Backend', 'Design'],
+          batch: '2nd Year â€¢ CSE',
+          bio: 'Building REST API endpoints with Next.js Route Handlers and Zod schema validation alongside UI design.',
+          skills: ['TypeScript', 'Zod', 'REST APIs', 'UI Design'],
+          projects: ['VTU / VCET Academic RAG Copilot'],
+          contributionsCount: 15
+        },
+        {
+          id: 'mem-krishna',
+          name: 'Krishna Prasad',
+          github: 'krishna16puttur',
+          role: 'Systems & Alumni Mentor',
+          tracks: ['Alumni', 'Backend'],
+          batch: 'Alumni / Senior Mentor â€¢ VCET',
+          bio: 'Mentors student contributors on production software engineering, database reliability, and real-world deployment.',
+          skills: ['Architecture', 'PostgreSQL', 'Linux', 'Cloud'],
+          projects: ['Cells â€” Academic & Evaluation Engine'],
+          contributionsCount: 52
+        }
+      ],
+
+      achievements: [
+        {
+          id: 'ach-1',
+          badge: '1ST PLACE â€¢ HACKATHON',
+          title: 'Winners â€” Coastal Karnataka AgriTech & Rural Innovation Hack',
+          date: 'October 2026',
+          team: 'Team Krishirent (CoRE VCET)',
+          description: 'Secured 1st place among 45+ regional engineering teams for building a low-bandwidth equipment rental network for Dakshina Kannada farmers.',
+          verified: true,
+          accent: 'cyan'
+        },
+        {
+          id: 'ach-2',
+          badge: 'OPEN SOURCE MILESTONE',
+          title: '150+ Merged Pull Requests Across CoRE Public Repositories',
+          date: 'September 2026',
+          team: '15+ Student Contributors',
+          description: 'Established peer code-review culture at VCET Puttur with automated TypeScript/ESLint CI pipelines and zero direct pushes to main.',
+          verified: true,
+          accent: 'violet'
+        },
+        {
+          id: 'ach-3',
+          badge: 'FINALISTS â€¢ NATIONAL',
+          title: 'Top 5 Finalists â€” Smart India Hackathon (Software Edition)',
+          date: 'August 2026',
+          team: 'Team CoRE Systems',
+          description: 'Engineered a real-time academic outcome tracking and automated rubric evaluation prototype praised for clean modular architecture.',
+          verified: true,
+          accent: 'emerald'
+        },
+        {
+          id: 'ach-4',
+          badge: 'RESEARCH PUBLICATION',
+          title: 'IEEE Conference Paper on Edge-Quantized Arecanut Grading',
+          date: 'July 2026',
+          team: 'CoRE Applied AI Group',
+          description: 'Published empirical benchmarks on deploying MobileNet variants on low-power edge hardware for Malnad agricultural sorting.',
+          verified: true,
+          accent: 'blue'
+        }
+      ],
+
+      gallery: [
+        {
+          id: 'gal-1',
+          album: 'CoRE Unleashed',
+          title: 'Full-Stack Next.js & Prisma Live Coding Lab',
+          date: 'Oct 2026',
+          caption: '85+ students building their first typed PostgreSQL route handler during CoRE Unleashed.',
+          scene: 'workshop'
+        },
+        {
+          id: 'gal-2',
+          album: 'Hackathon Nights',
+          title: 'CoRE Unbounded â€” 02:00 AM Architecture Review',
+          date: 'Aug 2026',
+          caption: 'Mentors and 2nd-year builders debugging API schemas and deployment pipelines overnight.',
+          scene: 'hackathon'
+        },
+        {
+          id: 'gal-3',
+          album: 'Git & Open Source',
+          title: 'First Pull Request Sprint â€” VCET Innovation Lab',
+          date: 'Sep 2026',
+          caption: 'Peer-to-peer Git branching, merge conflict resolution, and issue triage session.',
+          scene: 'sprint'
+        },
+        {
+          id: 'gal-4',
+          album: 'CoRE Unleashed',
+          title: 'Linux & Docker Containerization Hands-On',
+          date: 'Oct 2026',
+          caption: 'Students packaging multi-container apps and inspecting live system metrics.',
+          scene: 'docker'
+        },
+        {
+          id: 'gal-5',
+          album: 'Hackathon Nights',
+          title: 'Final Jury Demo & Live Product Pitch',
+          date: 'Aug 2026',
+          caption: 'Demonstrating live deployed prototypes rather than slide decks before faculty and alumni.',
+          scene: 'demo'
+        },
+        {
+          id: 'gal-6',
+          album: 'Git & Open Source',
+          title: 'Frontend & Design System Sync â€” Figma to Tailwind',
+          date: 'Nov 2026',
+          caption: 'Frontend co-leads and designers aligning DESIGN.md dark mode tokens and responsive cards.',
+          scene: 'design'
+        }
+      ]
+    };
+
+    /* Application UI State */
+    const state = {
+      currentRoute: 'home',
+      announcementIdx: 0,
+      heroCodeTab: 'stack.ts',
+      projectCategory: 'All',
+      projectTech: 'All',
+      projectSearch: '',
+      eventTab: 'Upcoming',
+      peopleTrack: 'All',
+      peopleSearch: '',
+      galleryAlbum: 'All',
+      registeredEventIds: new Set()
+    };
+
+    /* ===================================================================== */
+    /* ROUTING & NAVIGATION                                                  */
+    /* ===================================================================== */
+    function navigateTo(route) {
+      const validRoutes = ['home', 'projects', 'events', 'people', 'achievements', 'gallery', 'about', 'join'];
+      if (!validRoutes.includes(route)) route = 'home';
+      state.currentRoute = route;
+      window.location.hash = route;
+      updateActiveNavStyles();
+      renderCurrentView();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateActiveNavStyles() {
+      document.querySelectorAll('.nav-link').forEach((btn) => {
+        const isTarget = btn.getAttribute('data-nav') === state.currentRoute;
+        if (isTarget) {
+          btn.classList.add('text-cyan-400', 'bg-cyan-500/10', 'font-semibold');
+          btn.classList.remove('text-gray-300');
+        } else {
+          btn.classList.remove('text-cyan-400', 'bg-cyan-500/10', 'font-semibold');
+          btn.classList.add('text-gray-300');
+        }
+      });
+    }
+
+    function toggleMobileMenu(forceState) {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('mobile-menu-btn');
+      const isHidden = menu.classList.contains('hidden');
+      const shouldShow = typeof forceState === 'boolean' ? forceState : isHidden;
+      menu.classList.toggle('hidden', !shouldShow);
+      btn.setAttribute('aria-expanded', String(shouldShow));
+    }
+
+    function toggleReferenceDrawer(forceState) {
+      const drawer = document.getElementById('reference-drawer');
+      const isHidden = drawer.classList.contains('hidden');
+      const shouldShow = typeof forceState === 'boolean' ? forceState : isHidden;
+      drawer.classList.toggle('hidden', !shouldShow);
+    }
+
+    function cycleAnnouncement() {
+      state.announcementIdx = (state.announcementIdx + 1) % CORE_DATA.announcements.length;
+      const item = CORE_DATA.announcements[state.announcementIdx];
+      const el = document.getElementById('announcement-banner-text');
+      if (el) {
+        el.innerHTML = `<span class="font-mono text-cyan-400 mr-1.5">[${item.tag}]</span><strong class="text-white font-semibold">${item.text.split(':')[0]}:</strong>${item.text.split(':').slice(1).join(':')}`;
+      }
+    }
+
+    /* ===================================================================== */
+    /* CUSTOM SVG VISUAL GENERATORS (Zero broken external images)            */
+    /* ===================================================================== */
+    function renderProjectVisual(type) {
+      switch (type) {
+        case 'terminal-web':
+          return `
+            <div class="w-full h-full bg-[#111827] border border-[#1F2937] p-4 flex flex-col justify-between font-mono text-[11px] select-none">
+              <div class="flex items-center justify-between border-b border-gray-800 pb-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                </div>
+                <span class="text-gray-500">core-vcet/Core-Web</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 my-2">
+                <div class="col-span-2 bg-gray-900/90 border border-cyan-500/30 rounded-lg p-2.5">
+                  <div class="text-cyan-400 font-semibold">GET /api/projects</div>
+                  <div class="text-gray-400 text-[10px] mt-1">Prisma.project.findMany()</div>
+                  <div class="mt-2 flex gap-1">
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[9px]">200 OK</span>
+                    <span class="px-1.5 py-0.5 rounded bg-blue-500/15 text-blue-300 text-[9px]">Zod Validated</span>
+                  </div>
+                </div>
+                <div class="bg-gray-900/90 border border-violet-500/30 rounded-lg p-2 flex flex-col justify-center items-center text-center">
+                  <span class="text-lg font-bold text-white">48</span>
+                  <span class="text-[9px] text-violet-300">Merged PRs</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-gray-500">
+                <span>Next.js App Router</span>
+                <span class="text-emerald-400">â— main healthy</span>
+              </div>
+            </div>`;
+        case 'analytics-grid':
+          return `
+            <div class="w-full h-full bg-[#111827] border border-[#1F2937] p-4 flex flex-col justify-between font-mono text-[11px] select-none">
+              <div class="flex items-center justify-between">
+                <span class="text-blue-400 font-semibold">VCET // CELLS-AMS</span>
+                <span class="px-2 py-0.5 rounded bg-blue-500/15 text-blue-300 text-[9px]">CO-PO Engine</span>
+              </div>
+              <div class="flex items-end gap-2 h-20 px-2 pt-3">
+                <div class="flex-1 bg-cyan-500/30 border-t-2 border-cyan-400 rounded-t h-[55%]"></div>
+                <div class="flex-1 bg-blue-500/30 border-t-2 border-blue-400 rounded-t h-[78%]"></div>
+                <div class="flex-1 bg-violet-500/30 border-t-2 border-violet-400 rounded-t h-[92%]"></div>
+                <div class="flex-1 bg-emerald-500/30 border-t-2 border-emerald-400 rounded-t h-[68%]"></div>
+                <div class="flex-1 bg-cyan-500/30 border-t-2 border-cyan-400 rounded-t h-[85%]"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-gray-400 border-t border-gray-800 pt-1.5">
+                <span>Rubric Matrix: Verified</span>
+                <span class="text-cyan-300">99.4% Uptime</span>
+              </div>
+            </div>`;
+        case 'agritech-map':
+          return `
+            <div class="w-full h-full bg-[#111827] border border-[#1F2937] p-4 flex flex-col justify-between font-mono text-[11px] select-none">
+              <div class="flex items-center justify-between">
+                <span class="text-emerald-400 font-semibold">KRISHIRENT // PUTTUR</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 text-[9px]">Dakshina Kannada</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 my-1.5">
+                <div class="p-2 rounded-lg bg-black/40 border border-emerald-500/25">
+                  <div class="text-[10px] text-gray-400">Areca Sprayer</div>
+                  <div class="text-xs font-bold text-white mt-0.5">â‚¹350 / hr</div>
+                  <div class="text-[9px] text-emerald-400 mt-0.5">â— 2.4 km away</div>
+                </div>
+                <div class="p-2 rounded-lg bg-black/40 border border-cyan-500/25">
+                  <div class="text-[10px] text-gray-400">Mini Tiller</div>
+                  <div class="text-xs font-bold text-white mt-0.5">â‚¹500 / hr</div>
+                  <div class="text-[9px] text-cyan-400 mt-0.5">â— Available Today</div>
+                </div>
+              </div>
+              <div class="text-[10px] text-gray-400 flex justify-between">
+                <span>140+ Local Farmers Connected</span>
+                <span class="text-emerald-400">Verified Fleet</span>
+              </div>
+            </div>`;
+        case 'ai-neural':
+          return `
+            <div class="w-full h-full bg-[#111827] border border-[#1F2937] p-4 flex flex-col justify-between font-mono text-[11px] select-none">
+              <div class="flex items-center justify-between">
+                <span class="text-violet-400 font-semibold">VTU RAG COPILOT</span>
+                <span class="px-2 py-0.5 rounded bg-violet-500/15 text-violet-300 text-[9px]">pgvector</span>
+              </div>
+              <div class="p-2.5 rounded-lg bg-gray-900/90 border border-violet-500/30 space-y-1.5">
+                <div class="text-[10px] text-gray-400">&gt; Query: "Explain Dijkstra complexity in BCS401"</div>
+                <div class="text-[10px] text-cyan-300">â†³ Cited: VTU Module 3 Notes (p. 42) â€¢ 0.94 sim</div>
+              </div>
+              <div class="flex justify-between text-[10px] text-gray-500">
+                <span>Zero-Hallucination Citations</span>
+                <span class="text-violet-400">128ms latency</span>
+              </div>
+            </div>`;
+        case 'qr-security':
+          return `
+            <div class="w-full h-full bg-[#111827] border border-[#1F2937] p-4 flex items-center justify-between font-mono text-[11px] select-none">
+              <div class="space-y-1.5">
+                <span class="px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 text-[9px]">HMAC-SHA256</span>
+                <div class="text-white font-bold text-xs">PULSE CHECK-IN</div>
+                <div class="text-[10px] text-gray-400">Token rotates in <span class="text-amber-400">09s</span></div>
+                <div class="text-[10px] text-emerald-400 inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Anti-Proxy Active</span></div>
+              </div>
+              <div class="w-20 h-20 rounded-xl bg-white/5 border border-cyan-400/40 p-2 grid grid-cols-3 gap-1">
+                <div class="bg-cyan-400 rounded-sm"></div><div class="bg-transparent"></div><div class="bg-cyan-400 rounded-sm"></div>
+                <div class="bg-transparent"></div><div class="bg-blue-400 rounded-sm"></div><div class="bg-transparent"></div>
+                <div class="bg-cyan-400 rounded-sm"></div><div class="bg-cyan-400 rounded-sm"></div><div class="bg-violet-400 rounded-sm"></div>
+              </div>
+            </div>`;
+        default:
+          return `
+            <div class="w-full h-full bg-[#111827] border border-[#1F2937] p-4 flex flex-col justify-between font-mono text-[11px] select-none">
+              <div class="flex items-center justify-between">
+                <span class="text-amber-400 font-semibold">ARECAVISION EDGE</span>
+                <span class="px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 text-[9px]">INT8 Quantized</span>
+              </div>
+              <div class="flex items-center justify-center my-1">
+                <div class="px-4 py-2 rounded-lg border-2 border-dashed border-emerald-400/60 bg-emerald-500/10 text-center">
+                  <div class="text-xs font-bold text-emerald-300">GRADE: RASHI-A (96.8%)</div>
+                  <div class="text-[9px] text-gray-400">Inference: 18ms on Edge</div>
+                </div>
+              </div>
+              <div class="text-[10px] text-gray-500 flex justify-between">
+                <span>Puttur Market Dataset</span>
+                <span class="text-emerald-400">Offline Ready</span>
+              </div>
+            </div>`;
+      }
+    }
+
+    function renderGalleryIllustration(item) {
+      const icons = {
+        workshop: `<path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />`,
+        hackathon: `<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />`,
+        sprint: `<path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />`,
+        docker: `<path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />`,
+        demo: `<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />`,
+        design: `<path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />`
+      };
+      return `
+        <div class="w-full h-44 bg-[#111827] border-b border-[#1F2937] p-5 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex items-center justify-between z-10">
+            <span class="px-2.5 py-1 rounded-full text-[11px] font-mono bg-black/40 border border-white/10 text-gray-200">${item.album}</span>
+            <span class="text-xs font-mono text-gray-300">${item.date}</span>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-cyan-300 z-10">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              ${icons[item.scene] || icons.workshop}
+            </svg>
+          </div>
+          <div class="text-[11px] font-mono text-gray-300/80 z-10">VCET PUTTUR // ARCHIVE</div>
+        </div>`;
+    }
+
+    /* ===================================================================== */
+    /* REUSABLE CARD COMPONENTS                                              */
+    /* ===================================================================== */
+    function renderProjectCard(project) {
+      const statusColors = {
+        'Production': 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+        'Active Development': 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+        'Research': 'bg-violet-500/15 text-violet-300 border-violet-500/30'
+      };
+      const badgeClass = statusColors[project.status] || statusColors['Active Development'];
+
+      return `
+        <article class="core-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+          <div>
+            <!-- 16:9 Interactive Visual Cover -->
+            <div class="relative aspect-video border-b border-gray-800 overflow-hidden cursor-pointer" onclick="openProjectModal('${project.id}')">
+              ${renderProjectVisual(project.visualType)}
+              <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium border backdrop-blur-md ${badgeClass}">
+                ${project.status}
+              </span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-5">
+              <div class="flex items-center justify-between gap-2 text-xs text-gray-400 font-mono mb-2">
+                <span>${project.category}</span>
+                <span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span>${project.stars}</span><span class="text-gray-500">•</span><span>${project.prsMerged} PRs</span></span>
+              </div>
+              <h3 onclick="openProjectModal('${project.id}')" class="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors cursor-pointer">
+                ${project.title}
+              </h3>
+              <p class="text-sm text-gray-400 mt-2 line-clamp-2 leading-relaxed">
+                ${project.shortDesc}
+              </p>
+
+              <!-- Tech Chips -->
+              <div class="flex flex-wrap gap-1.5 mt-4">
+                ${project.technologies.map(tech => `
+                  <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-[#0B0F17] text-gray-300 border border-gray-800">
+                    ${tech}
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Footer Actions per DESIGN.md 4.2 -->
+          <div class="px-5 py-4 border-t border-gray-800/80 bg-[#0d1320]/60 flex items-center justify-between gap-2">
+            <button onclick="openProjectModal('${project.id}')" class="text-xs font-semibold text-gray-300 hover:text-white transition-colors">
+              <span class="inline-flex items-center gap-1.5"><span>Architecture & Team</span><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span>
+            </button>
+            <div class="flex items-center gap-2">
+              <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository" class="p-2 rounded-lg border border-gray-700 text-gray-300 hover:text-white hover:bg-white/5 transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              </a>
+              ${project.liveUrl ? `
+                <a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary px-3 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center gap-1">
+                  <span>Open Live</span>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              ` : ''}
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderEventCard(event, showFullSchedule = false) {
+      const isOpen = event.status === 'Registration Open';
+      const isRegistered = state.registeredEventIds.has(event.id);
+      const pct = Math.min(100, Math.round((event.registered / event.capacity) * 100));
+
+      return `
+        <article class="core-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-start justify-between gap-4">
+              <!-- Date Pill per DESIGN.md 4.2 -->
+              <div class="flex items-center gap-3.5">
+                <div class="w-14 h-14 rounded-2xl bg-[#0B0F17] border border-gray-800 flex flex-col items-center justify-center shrink-0">
+                  <span class="text-[11px] font-mono font-bold text-cyan-400 uppercase">${event.dateMonth}</span>
+                  <span class="text-xl font-extrabold text-white leading-none mt-0.5">${event.dateDay}</span>
+                </div>
+                <div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    ${event.isFlagship ? `<span class="px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold bg-violet-500/15 text-violet-300 border border-violet-500/30">${event.series}</span>` : `<span class="text-xs font-mono text-gray-400">${event.series}</span>`}
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium border ${isOpen ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' : 'bg-gray-800 text-gray-400 border-gray-700'}">
+                      ${isRegistered ? '<span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Registered</span></span>' : event.status}
+                    </span>
+                  </div>
+                  <h3 class="text-lg sm:text-xl font-bold text-white mt-1.5">${event.title}</h3>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-sm text-gray-400 mt-3.5 leading-relaxed">${event.summary}</p>
+
+            <!-- Venue & Meta -->
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-300 font-mono bg-[#0B0F17]/80 p-3 rounded-xl border border-gray-800/80">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-cyan-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span class="truncate">${event.venue}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-violet-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>${event.teamSize}</span>
+              </div>
+            </div>
+
+            ${showFullSchedule ? `
+              <!-- Expandable Schedule & Rules for Events Page -->
+              <div class="mt-4 pt-4 border-t border-gray-800 space-y-3">
+                <div class="text-xs font-mono uppercase tracking-wider text-gray-400">Event Schedule</div>
+                <div class="space-y-2">
+                  ${event.schedule.map(s => `
+                    <div class="flex items-start gap-3 text-xs">
+                      <span class="font-mono text-cyan-400 shrink-0 w-24">${s.time}</span>
+                      <span class="text-gray-300">${s.title}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Capacity Progress & Register CTA -->
+          <div class="mt-5 pt-4 border-t border-gray-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex-1 max-w-xs">
+              <div class="flex justify-between text-xs font-mono text-gray-400 mb-1.5">
+                <span>Capacity</span>
+                <span>${event.registered} / ${event.capacity} seats</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-gray-800 overflow-hidden">
+                <div class="h-full rounded-full ${isOpen ? 'bg-[#2563EB]' : 'bg-gray-600'}" style="width: ${pct}%"></div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="openEventModal('${event.id}')" class="btn-secondary px-3.5 py-2.5 rounded-xl text-xs font-semibold min-h-[42px]">
+                Details & Rules
+              </button>
+              ${isOpen ? `
+                <button onclick="openRegisterModal('${event.id}')" class="${isRegistered ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/40' : 'btn-primary'} px-4 py-2.5 rounded-xl text-xs font-semibold min-h-[42px]">
+                  ${isRegistered ? '<span class="inline-flex items-center gap-1.5"><span>View Pass</span><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span>' : 'Register Now'}
+                </button>
+              ` : `
+                <span class="px-3.5 py-2.5 rounded-xl text-xs font-mono text-gray-500 bg-gray-900 border border-gray-800">Archived</span>
+              `}
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderMemberCard(member) {
+      return `
+        <article onclick="openMemberModal('${member.id}')" class="core-card rounded-2xl p-5 cursor-pointer flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center gap-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-[#1E293B] border border-[#334155] text-[#38BDF8] flex items-center justify-center font-bold text-white text-lg shrink-0 shadow-md">
+                ${member.name.slice(0, 2).toUpperCase()}
+              </div>
+              <div class="min-w-0">
+                <h3 class="text-base font-bold text-white group-hover:text-cyan-400 transition-colors truncate">${member.name}</h3>
+                <p class="text-xs text-cyan-300 font-medium truncate">${member.role}</p>
+                <p class="text-[11px] font-mono text-gray-400 mt-0.5">${member.batch}</p>
+              </div>
+            </div>
+
+            <p class="text-xs text-gray-400 mt-3.5 line-clamp-2 leading-relaxed">
+              ${member.bio}
+            </p>
+
+            <div class="flex flex-wrap gap-1.5 mt-3.5">
+              ${member.skills.slice(0, 4).map(skill => `
+                <span class="px-2 py-0.5 rounded-md text-[11px] font-mono bg-[#0B0F17] text-gray-300 border border-gray-800">
+                  ${skill}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-gray-800/80 flex items-center justify-between text-xs">
+            <span class="font-mono text-gray-400">@${member.github}</span>
+            <span class="font-mono text-emerald-400">${member.contributionsCount} commits/PRs</span>
+          </div>
+        </article>`;
+    }
+
+    /* ===================================================================== */
+    /* VIEWS RENDERING (Home, Projects, Events, People, Achievements, etc.)  */
+    /* ===================================================================== */
+    function renderHeroTerminalCode() {
+      const snippets = {
+        'stack.ts': `<span class="text-gray-500">// core-vcet/Core-Web â€” Unified App Router Architecture</span>
+<span class="text-violet-400">import</span> { prisma } <span class="text-violet-400">from</span> <span class="text-emerald-400">'@/lib/prisma'</span>;
+<span class="text-violet-400">import</span> { z } <span class="text-violet-400">from</span> <span class="text-emerald-400">'zod'</span>;
+
+<span class="text-violet-400">export async function</span> <span class="text-cyan-400">getFeaturedBuilds</span>() {
+  <span class="text-violet-400">return await</span> prisma.project.<span class="text-blue-400">findMany</span>({
+    where: { featured: <span class="text-amber-400">true</span>, approved: <span class="text-amber-400">true</span> },
+    include: { contributors: <span class="text-amber-400">true</span>, technologies: <span class="text-amber-400">true</span> },
+    orderBy: { prsMerged: <span class="text-emerald-400">'desc'</span> },
+  });
+}`,
+        'deploy.sh': `<span class="text-gray-500"># CoRE VCET Contributor Workflow (No direct push to main)</span>
+<span class="text-cyan-400">$</span> git checkout -b feature/project-cards
+<span class="text-cyan-400">$</span> npx prisma generate && npx prisma migrate dev
+<span class="text-cyan-400">$</span> npm run lint && npm run typecheck
+<span class="text-emerald-400 inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg><span>TypeScript strict checks passed (0 errors)</span></span>
+<span class="text-emerald-400 inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Zod schema validation verified</span></span>
+<span class="text-cyan-400">$</span> git push origin feature/project-cards <span class="text-gray-500"># Ready for PR!</span>`,
+        'community.json': `{
+  <span class="text-cyan-400">"community"</span>: <span class="text-emerald-400">"Center of Research and Excellence (CoRE)"</span>,
+  <span class="text-cyan-400">"institution"</span>: <span class="text-emerald-400">"VCET Puttur, Karnataka"</span>,
+  <span class="text-cyan-400">"motto"</span>: <span class="text-emerald-400">"Demonstrating what we build, not just describing who we are."</span>,
+  <span class="text-cyan-400">"flagships"</span>: [<span class="text-amber-300">"CoRE Unbounded"</span>, <span class="text-amber-300">"CoRE Unleashed"</span>],
+  <span class="text-cyan-400">"openSource"</span>: <span class="text-violet-400">true</span>
+}`
+      };
+      return snippets[state.heroCodeTab] || snippets['stack.ts'];
+    }
+
+    function setHeroCodeTab(tab) {
+      state.heroCodeTab = tab;
+      const codeEl = document.getElementById('hero-terminal-body');
+      if (codeEl) codeEl.innerHTML = renderHeroTerminalCode();
+      document.querySelectorAll('.hero-tab-btn').forEach((btn) => {
+        const active = btn.getAttribute('data-tab') === tab;
+        btn.className = active
+          ? 'hero-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
+          : 'hero-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono text-gray-400 hover:text-gray-200';
+      });
+    }
+
+    function renderHomeView() {
+      const featuredProjects = CORE_DATA.projects.filter(p => p.featured).slice(0, 3);
+      const upcomingEvents = CORE_DATA.events.filter(e => e.type === 'Upcoming').slice(0, 2);
+      const topAchievements = CORE_DATA.achievements.slice(0, 3);
+      const galleryStrip = CORE_DATA.gallery.slice(0, 3);
+
+      return `
+        <!-- HERO SECTION (PRD Section 6.1 #2: Demonstration over description) -->
+        <section class="relative bg-tech-grid border-b border-gray-800/80 overflow-hidden">
+          <!-- Ambient Radial Glows -->
+          <div class="pointer-events-none absolute -top-24 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+          <div class="pointer-events-none absolute top-20 right-10 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl"></div>
+
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+              <!-- Left Hero Copy -->
+              <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111827] border border-gray-700/80 text-xs font-mono text-gray-300">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                  <span>VCET Puttur â€¢ Student Engineering & Research Community</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-white leading-[1.1]">
+                  Built by <span class="text-[#06B6D4]">CoRE</span>,<br />
+                  for <span class="text-[#06B6D4]">CoRE</span>.
+                </h1>
+
+                <p class="text-base sm:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                  We donâ€™t just talk about technologyâ€”we ship open-source platforms, solve regional problems in Dakshina Kannada, run hands-on bootcamps, and engineer software together at Vivekananda College of Engineering & Technology.
+                </p>
+
+                <!-- Dual CTAs per PRD 6.1 -->
+                <div class="flex flex-wrap items-center gap-3.5 pt-2">
+                  <button onclick="navigateTo('projects')" class="btn-primary px-6 py-3.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2 min-h-[48px]">
+                    <span>See What We Build</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                  </button>
+                  <button onclick="navigateTo('join')" class="btn-secondary px-6 py-3.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2 min-h-[48px]">
+                    <span>Join CoRE</span>
+                  </button>
+                  <a href="https://github.com/core-vcet/Core-Web" target="_blank" rel="noopener noreferrer" class="px-4 py-3.5 rounded-xl text-xs font-mono text-gray-400 hover:text-white inline-flex items-center gap-2 transition-colors">
+                    <span>git clone core-vcet/Core-Web</span>
+                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Right Interactive Live Code / Architecture Card -->
+              <div class="lg:col-span-5">
+                <div class="rounded-2xl bg-[#0d1320] border border-gray-800 shadow-2xl overflow-hidden">
+                  <div class="px-4 py-3 bg-[#111827] border-b border-gray-800 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+                      <span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+                      <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <button data-tab="stack.ts" onclick="setHeroCodeTab('stack.ts')" class="hero-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">stack.ts</button>
+                      <button data-tab="deploy.sh" onclick="setHeroCodeTab('deploy.sh')" class="hero-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono text-gray-400 hover:text-gray-200">deploy.sh</button>
+                      <button data-tab="community.json" onclick="setHeroCodeTab('community.json')" class="hero-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono text-gray-400 hover:text-gray-200">community.json</button>
+                    </div>
+                  </div>
+                  <pre class="p-5 text-xs font-mono leading-relaxed overflow-x-auto text-gray-300 min-h-[225px]"><code id="hero-terminal-body">${renderHeroTerminalCode()}</code><span class="inline-block w-2 h-4 bg-cyan-400 align-middle ml-1 cursor-blink"></span></pre>
+                  <div class="px-4 py-2.5 bg-[#111827]/90 border-t border-gray-800 flex items-center justify-between text-[11px] font-mono text-gray-400">
+                    <span>Stack: Next.js â€¢ TS â€¢ Prisma â€¢ Postgres</span>
+                    <span class="text-emerald-400">â— Live Repo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- BY THE NUMBERS (PRD Section 6.1 #6) -->
+        <section class="border-b border-gray-800/80 bg-[#0d131f]">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="p-4 rounded-2xl bg-[#111827]/70 border border-gray-800/80">
+                <div class="text-2xl sm:text-3xl font-extrabold text-white">24+</div>
+                <div class="text-xs font-mono text-cyan-400 mt-1">Open-Source Projects</div>
+                <div class="text-xs text-gray-500 mt-0.5">Shipped by student teams</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-[#111827]/70 border border-gray-800/80">
+                <div class="text-2xl sm:text-3xl font-extrabold text-white">18+</div>
+                <div class="text-xs font-mono text-blue-400 mt-1">Workshops & Hackathons</div>
+                <div class="text-xs text-gray-500 mt-0.5">Unbounded & Unleashed series</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-[#111827]/70 border border-gray-800/80">
+                <div class="text-2xl sm:text-3xl font-extrabold text-white">65+</div>
+                <div class="text-xs font-mono text-violet-400 mt-1">Active Student Builders</div>
+                <div class="text-xs text-gray-500 mt-0.5">Across 1st to Final Year</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-[#111827]/70 border border-gray-800/80">
+                <div class="text-2xl sm:text-3xl font-extrabold text-white">12+</div>
+                <div class="text-xs font-mono text-emerald-400 mt-1">Hackathon & IEEE Wins</div>
+                <div class="text-xs text-gray-500 mt-0.5">State & National recognition</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FEATURED PROJECTS (PRD Section 6.1 #4) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+            <div>
+              <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Proof of Work</span>
+              <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Featured Community Builds</h2>
+              <p class="text-sm text-gray-400 mt-1">Real software engineered, reviewed, and maintained by CoRE members.</p>
+            </div>
+            <button onclick="navigateTo('projects')" class="btn-secondary px-4 py-2.5 rounded-xl text-xs font-semibold self-start sm:self-auto">
+              Browse All Projects (${CORE_DATA.projects.length}) <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${featuredProjects.map(p => renderProjectCard(p)).join('')}
+          </div>
+        </section>
+
+        <!-- UPCOMING & FLAGSHIP EVENTS (PRD Section 6.1 #5) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+            <div>
+              <span class="text-xs font-mono uppercase tracking-wider text-violet-400">Events & Flagship Series</span>
+              <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Upcoming at CoRE VCET</h2>
+              <p class="text-sm text-gray-400 mt-1">Hands-on bootcamps, open-source sprints, and 24-hour buildathons.</p>
+            </div>
+            <button onclick="navigateTo('events')" class="btn-secondary px-4 py-2.5 rounded-xl text-xs font-semibold self-start sm:self-auto">
+              Full Event Calendar & Archive <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            ${upcomingEvents.map(e => renderEventCard(e, false)).join('')}
+          </div>
+        </section>
+
+        <!-- ACHIEVEMENTS & LEADERSHIP EXCERPT (PRD Section 6.1 #7 & #9) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Verified Achievements -->
+            <div class="lg:col-span-7 space-y-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-mono uppercase tracking-wider text-emerald-400">Verified Milestones</span>
+                  <h2 class="text-2xl font-bold text-white mt-1">Recent Achievements</h2>
+                </div>
+                <button onclick="navigateTo('achievements')" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300">View all <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+              </div>
+
+              <div class="space-y-4">
+                ${topAchievements.map(a => `
+                  <div class="core-card rounded-2xl p-5">
+                    <div class="flex items-center justify-between gap-2 text-xs font-mono mb-1.5">
+                      <span class="text-cyan-400 font-semibold">${a.badge}</span>
+                      <span class="text-gray-500">${a.date}</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white">${a.title}</h3>
+                    <p class="text-xs text-gray-400 mt-1.5 leading-relaxed">${a.description}</p>
+                    <div class="mt-3 text-[11px] font-mono text-emerald-400 inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Verified • ${a.team}</span></div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Honest "What You Can Do in CoRE" + Leadership Note (PRD 5.1 & 6.1 #9) -->
+            <div class="lg:col-span-5 flex flex-col justify-between gap-6">
+              <div class="rounded-2xl bg-[#111827] border border-[#1F2937] border border-gray-800 p-6 space-y-4">
+                <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-blue-500/15 text-blue-300 border border-blue-500/30">Community Ethos</span>
+                <h3 class="text-xl font-bold text-white">What You Actually Do in CoRE</h3>
+                <p class="text-sm text-gray-300 leading-relaxed">
+                  No passive slide-watching. Whether you join in 1st year or 3rd year, you learn by shipping real code with peer mentorship:
+                </p>
+                <ul class="space-y-2.5 text-xs text-gray-300">
+                  <li class="flex items-start gap-2.5">
+                    <span class="text-cyan-400 font-mono mt-0.5">01.</span>
+                    <span>Pick up <code class="text-cyan-300">good first issues</code> on Core-Web and learn Git PR reviews.</span>
+                  </li>
+                  <li class="flex items-start gap-2.5">
+                    <span class="text-blue-400 font-mono mt-0.5">02.</span>
+                    <span>Build full-stack & AI systems solving campus and Puttur regional problems.</span>
+                  </li>
+                  <li class="flex items-start gap-2.5">
+                    <span class="text-violet-400 font-mono mt-0.5">03.</span>
+                    <span>Organize and mentor technical workshops like <em>CoRE Unleashed</em>.</span>
+                  </li>
+                </ul>
+                <div class="pt-2">
+                  <button onclick="navigateTo('join')" class="btn-primary w-full py-3 rounded-xl text-xs font-semibold">
+                    Apply to Join CoRE Cohort <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Leadership Message Excerpt -->
+              <div class="rounded-2xl bg-[#111827] border border-gray-800 p-6">
+                <p class="text-sm italic text-gray-300 leading-relaxed">
+                  â€œA college technical community shouldnâ€™t be judged by its posters, but by its GitHub repositories, active builders, and the juniors it mentors into confident engineers.â€
+                </p>
+                <div class="mt-4 flex items-center justify-between">
+                  <div>
+                    <div class="text-xs font-bold text-white">CoRE Leadership & Faculty Coordination</div>
+                    <div class="text-[11px] font-mono text-gray-400">VCET Puttur</div>
+                  </div>
+                  <button onclick="navigateTo('about')" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300">Read Manifesto <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- GALLERY STRIP (PRD Section 6.1 #10) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">In Action</span>
+              <h2 class="text-2xl font-bold text-white mt-1">From the Lab & Hackathons</h2>
+            </div>
+            <button onclick="navigateTo('gallery')" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300">Open Gallery <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            ${galleryStrip.map(g => `
+              <div onclick="openGalleryModal('${g.id}')" class="core-card rounded-2xl overflow-hidden cursor-pointer">
+                ${renderGalleryIllustration(g)}
+                <div class="p-4">
+                  <h3 class="text-sm font-bold text-white">${g.title}</h3>
+                  <p class="text-xs text-gray-400 mt-1 line-clamp-2">${g.caption}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderProjectsView() {
+      const categories = ['All', 'Full-Stack Web', 'AI / ML', 'Systems & DevOps', 'AgriTech / Social'];
+      const techs = ['All', 'Next.js', 'TypeScript', 'PostgreSQL', 'Python', 'Docker'];
+
+      const filtered = CORE_DATA.projects.filter((p) => {
+        const matchCat = state.projectCategory === 'All' || p.category === state.projectCategory;
+        const matchTech = state.projectTech === 'All' || p.technologies.includes(state.projectTech);
+        const q = state.projectSearch.trim().toLowerCase();
+        const matchSearch = !q || p.title.toLowerCase().includes(q) || p.shortDesc.toLowerCase().includes(q) || p.technologies.some(t => t.toLowerCase().includes(q));
+        return matchCat && matchTech && matchSearch;
+      });
+
+      return `
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14">
+          <div class="max-w-3xl">
+            <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Projects Showcase</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">What CoRE Members Build</h1>
+            <p class="text-sm sm:text-base text-gray-400 mt-2">
+              Filter by domain or stackâ€”inspired by <code class="text-cyan-300">GET /api/projects?technology=Next.js</code> in our backend architecture.
+            </p>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="mt-8 p-4 sm:p-5 rounded-2xl bg-[#111827] border border-gray-800 space-y-4">
+            <div class="flex flex-col md:flex-row gap-4 justify-between">
+              <div class="relative flex-1">
+                <input type="text" value="${state.projectSearch}" oninput="state.projectSearch = this.value; renderCurrentView()" placeholder="Search projects, technologies, or keywords..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" />
+                <svg class="w-4 h-4 text-gray-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <div class="flex items-center gap-2 overflow-x-auto pb-1">
+                <span class="text-xs font-mono text-gray-500 shrink-0">Tech:</span>
+                ${techs.map(t => `
+                  <button onclick="state.projectTech = '${t}'; renderCurrentView()" class="px-3 py-1.5 rounded-lg text-xs font-mono shrink-0 transition-colors ${state.projectTech === t ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'bg-[#0B0F17] text-gray-400 border border-gray-800 hover:text-white'}">
+                    ${t}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-800/80">
+              <span class="text-xs font-mono text-gray-500 mr-1">Domain:</span>
+              ${categories.map(cat => `
+                <button onclick="state.projectCategory = '${cat}'; renderCurrentView()" class="px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors ${state.projectCategory === cat ? 'btn-primary' : 'bg-[#0B0F17] text-gray-300 border border-gray-800 hover:border-gray-700'}">
+                  ${cat}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Results Grid or Deliberate Empty State (DESIGN.md 4.4) -->
+          ${filtered.length > 0 ? `
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              ${filtered.map(p => renderProjectCard(p)).join('')}
+            </div>
+          ` : `
+            <div class="mt-10 rounded-2xl bg-[#111827] border border-gray-800 p-12 text-center max-w-lg mx-auto">
+              <div class="w-12 h-12 rounded-2xl bg-[#1E293B] border border-[#334155] text-cyan-400 flex items-center justify-center mx-auto mb-4"><svg class="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+              <h3 class="text-lg font-bold text-white">No matching projects found</h3>
+              <p class="text-sm text-gray-400 mt-1">Try resetting your technology or domain filters, or propose a new project idea to CoRE!</p>
+              <button onclick="state.projectCategory='All'; state.projectTech='All'; state.projectSearch=''; renderCurrentView()" class="btn-secondary mt-4 px-4 py-2 rounded-xl text-xs font-semibold">
+                Reset All Filters
+              </button>
+            </div>
+          `}
+        </section>
+      `;
+    }
+
+    function renderEventsView() {
+      const tabs = ['Upcoming', 'Past', 'Flagship Series'];
+      const filtered = CORE_DATA.events.filter((e) => {
+        if (state.eventTab === 'Upcoming') return e.type === 'Upcoming';
+        if (state.eventTab === 'Past') return e.type === 'Past';
+        return e.isFlagship;
+      });
+
+      return `
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <span class="text-xs font-mono uppercase tracking-wider text-violet-400">Unified Event System</span>
+              <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Events, Bootcamps & Buildathons</h1>
+              <p class="text-sm sm:text-base text-gray-400 mt-2 max-w-2xl">
+                Featuring our flagship series <strong class="text-gray-200">CoRE Unbounded</strong> and <strong class="text-gray-200">CoRE Unleashed</strong> alongside weekly open-source sprints.
+              </p>
+            </div>
+
+            <!-- Event Lifecycle Tabs -->
+            <div class="inline-flex p-1 rounded-xl bg-[#111827] border border-gray-800 self-start">
+              ${tabs.map(t => `
+                <button onclick="state.eventTab = '${t}'; renderCurrentView()" class="px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${state.eventTab === t ? 'btn-primary' : 'text-gray-400 hover:text-white'}">
+                  ${t}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            ${filtered.map(e => renderEventCard(e, true)).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderPeopleView() {
+      const tracks = ['All', 'Leads', 'Frontend', 'Backend', 'Design', 'Alumni'];
+      const filtered = CORE_DATA.members.filter((m) => {
+        const matchTrack = state.peopleTrack === 'All' || m.tracks.includes(state.peopleTrack);
+        const q = state.peopleSearch.trim().toLowerCase();
+        const matchSearch = !q || m.name.toLowerCase().includes(q) || m.role.toLowerCase().includes(q) || m.skills.some(s => s.toLowerCase().includes(q));
+        return matchTrack && matchSearch;
+      });
+
+      return `
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14">
+          <div class="max-w-3xl">
+            <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">People Directory</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Builders, Contributors & Mentors</h1>
+            <p class="text-sm sm:text-base text-gray-400 mt-2">
+              Click any member card to inspect their public portfolio, projects, and technical stack. (USN & phone numbers remain strictly private per PRD Â§7.1.)
+            </p>
+          </div>
+
+          <!-- Track Filter & Search -->
+          <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-[#111827] p-4 rounded-2xl border border-gray-800">
+            <div class="flex flex-wrap gap-2">
+              ${tracks.map(tr => `
+                <button onclick="state.peopleTrack = '${tr}'; renderCurrentView()" class="px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors ${state.peopleTrack === tr ? 'btn-primary' : 'bg-[#0B0F17] text-gray-300 border border-gray-800 hover:border-gray-700'}">
+                  ${tr}
+                </button>
+              `).join('')}
+            </div>
+
+            <input type="text" value="${state.peopleSearch}" oninput="state.peopleSearch = this.value; renderCurrentView()" placeholder="Search by name or skill..." class="sm:w-64 px-3.5 py-2 rounded-xl bg-[#0B0F17] border border-gray-700 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500" />
+          </div>
+
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${filtered.map(m => renderMemberCard(m)).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderAchievementsView() {
+      return `
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14">
+          <div class="max-w-3xl">
+            <span class="text-xs font-mono uppercase tracking-wider text-emerald-400">Verified Track Record</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Community Achievements & Milestones</h1>
+            <p class="text-sm sm:text-base text-gray-400 mt-2">
+              Every achievement on CoRE is verified against competition records, open-source repositories, or published research.
+            </p>
+          </div>
+
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            ${CORE_DATA.achievements.map(a => `
+              <article class="core-card rounded-2xl p-6 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-2 text-xs font-mono mb-3">
+                    <span class="px-2.5 py-1 rounded-md bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold">${a.badge}</span>
+                    <span class="text-gray-400">${a.date}</span>
+                  </div>
+                  <h2 class="text-xl font-bold text-white">${a.title}</h2>
+                  <p class="text-sm text-gray-400 mt-2.5 leading-relaxed">${a.description}</p>
+                </div>
+                <div class="mt-5 pt-4 border-t border-gray-800 flex items-center justify-between text-xs font-mono">
+                  <span class="text-gray-300">${a.team}</span>
+                  <span class="text-emerald-400 inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg><span>Admin Verified</span></span>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderGalleryView() {
+      const albums = ['All', 'CoRE Unleashed', 'Hackathon Nights', 'Git & Open Source'];
+      const filtered = CORE_DATA.gallery.filter(g => state.galleryAlbum === 'All' || g.album === state.galleryAlbum);
+
+      return `
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Event-Linked Albums</span>
+              <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Community Gallery</h1>
+              <p class="text-sm text-gray-400 mt-1">Snapshots from workshops, late-night buildathons, and peer code sprints at VCET.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              ${albums.map(alb => `
+                <button onclick="state.galleryAlbum = '${alb}'; renderCurrentView()" class="px-3.5 py-2 rounded-xl text-xs font-semibold ${state.galleryAlbum === alb ? 'btn-primary' : 'bg-[#111827] text-gray-300 border border-gray-800'}">
+                  ${alb}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${filtered.map(g => `
+              <article onclick="openGalleryModal('${g.id}')" class="core-card rounded-2xl overflow-hidden cursor-pointer">
+                ${renderGalleryIllustration(g)}
+                <div class="p-5">
+                  <h3 class="text-base font-bold text-white">${g.title}</h3>
+                  <p class="text-xs text-gray-400 mt-1.5 leading-relaxed">${g.caption}</p>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderAboutView() {
+      return `
+        <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 space-y-12">
+          <div>
+            <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Identity & Vision</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">More Than a College Club.</h1>
+            <p class="text-base text-gray-300 mt-4 leading-relaxed">
+              <strong>CoRE (Center of Research and Excellence)</strong> is the student technical community at Vivekananda College of Engineering & Technology (VCET), Puttur, Karnataka. Its value comes not from attendance sheets, but from what its members learn, build, experiment with, and contribute.
+            </p>
+          </div>
+
+          <!-- 3 Core Pillars -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="core-card rounded-2xl p-6">
+              <div class="text-cyan-400 font-mono text-xs mb-2">01 // PUBLIC IDENTITY</div>
+              <h2 class="text-lg font-bold text-white">Demonstration Over Description</h2>
+              <p class="text-sm text-gray-400 mt-2 leading-relaxed">
+                Live repositories, deployed products, and real contributor histories replace generic marketing slogans.
+              </p>
+            </div>
+            <div class="core-card rounded-2xl p-6">
+              <div class="text-blue-400 font-mono text-xs mb-2">02 // ENGINEERING RIGOR</div>
+              <h2 class="text-lg font-bold text-white">Real-World Dev Culture</h2>
+              <p class="text-sm text-gray-400 mt-2 leading-relaxed">
+                Students practice TypeScript strictness, Prisma schema design, Zod validation, and constructive PR reviews.
+              </p>
+            </div>
+            <div class="core-card rounded-2xl p-6">
+              <div class="text-violet-400 font-mono text-xs mb-2">03 // PEER MENTORSHIP</div>
+              <h2 class="text-lg font-bold text-white">Gradual Onboarding</h2>
+              <p class="text-sm text-gray-400 mt-2 leading-relaxed">
+                Senior leads break complex systems into guided starter issues so 1st & 2nd year students grow with confidence.
+              </p>
+            </div>
+          </div>
+
+          <!-- Regional Community Ecosystem Note -->
+          <div class="rounded-2xl bg-[#111827] border border-gray-800 p-6 sm:p-8 space-y-4">
+            <h2 class="text-xl font-bold text-white">Standing Alongside Coastal Karnatakaâ€™s Developer Communities</h2>
+            <p class="text-sm text-gray-300 leading-relaxed">
+              CoRE VCET shares the open engineering spirit of peer student communities across Mangaluru, Nitte, and Putturâ€”combining <strong>SOSC Sahyadriâ€™s</strong> open-source transparency, <strong>FiniteLoop NMAMITâ€™s</strong> full-stack project craftsmanship, and <strong>DevNation AJâ€™s</strong> high-energy hackathon cultureâ€”tailored to VCET Putturâ€™s research and regional problem-solving mission.
+            </p>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderJoinView() {
+      return `
+        <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14">
+          <div class="text-center mb-8">
+            <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Membership Application</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Join CoRE VCET</h1>
+            <p class="text-sm text-gray-400 mt-2">
+              Open to all VCET Puttur students passionate about building software, researching AI/systems, or designing digital products.
+            </p>
+          </div>
+
+          <form id="join-core-form" onsubmit="handleJoinSubmit(event)" novalidate class="rounded-2xl bg-[#111827] border border-gray-800 p-6 sm:p-8 space-y-5 shadow-xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="join-name" class="block text-xs font-semibold text-gray-300 mb-1.5">Full Name *</label>
+                <input id="join-name" name="name" type="text" required placeholder="e.g., Karthik Shetty" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-blue-500" />
+                <p id="err-join-name" class="hidden text-xs text-rose-400 mt-1"></p>
+              </div>
+              <div>
+                <label for="join-email" class="block text-xs font-semibold text-gray-300 mb-1.5">College / Personal Email *</label>
+                <input id="join-email" name="email" type="email" required placeholder="you@vcetputtur.ac.in" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-blue-500" />
+                <p id="err-join-email" class="hidden text-xs text-rose-400 mt-1"></p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div>
+                <label for="join-branch" class="block text-xs font-semibold text-gray-300 mb-1.5">Department *</label>
+                <select id="join-branch" name="branch" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-blue-500">
+                  <option value="CSE">CSE</option>
+                  <option value="AIML">AI & ML</option>
+                  <option value="ISE">ISE</option>
+                  <option value="ECE">ECE</option>
+                  <option value="MECH">Mechanical</option>
+                  <option value="CIVIL">Civil</option>
+                </select>
+              </div>
+              <div>
+                <label for="join-year" class="block text-xs font-semibold text-gray-300 mb-1.5">Year of Study *</label>
+                <select id="join-year" name="year" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-blue-500">
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                </select>
+              </div>
+              <div>
+                <label for="join-track" class="block text-xs font-semibold text-gray-300 mb-1.5">Primary Track *</label>
+                <select id="join-track" name="track" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-blue-500">
+                  <option value="Frontend (React/Next.js)">Frontend (React/Next.js)</option>
+                  <option value="Backend (Node/Prisma/DB)">Backend (Node/Prisma/DB)</option>
+                  <option value="AI / ML & Research">AI / ML & Research</option>
+                  <option value="UI/UX Design">UI/UX Design</option>
+                  <option value="Beginner / Exploring">Beginner / Exploring</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="join-github" class="block text-xs font-semibold text-gray-300 mb-1.5">GitHub Username (Optional for 1st Years)</label>
+              <input id="join-github" name="github" type="text" placeholder="e.g., octocat" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm font-mono text-white focus:outline-none focus:border-blue-500" />
+            </div>
+
+            <div>
+              <label for="join-why" class="block text-xs font-semibold text-gray-300 mb-1.5">What would you like to build or learn in CoRE? *</label>
+              <textarea id="join-why" name="why" rows="3" required placeholder="Share a project idea, a technology you're exploring, or why you want to collaborate..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-blue-500"></textarea>
+              <p id="err-join-why" class="hidden text-xs text-rose-400 mt-1"></p>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between gap-4">
+              <span class="text-xs text-gray-500">Reviewed manually by CoRE Leads (PRD Â§11)</span>
+              <button type="submit" class="btn-primary px-6 py-3 rounded-xl text-sm font-semibold min-h-[46px]">
+                Submit Application
+              </button>
+            </div>
+          </form>
+        </section>
+      `;
+    }
+
+    function renderCurrentView() {
+      const root = document.getElementById('app-root');
+      if (!root) return;
+      switch (state.currentRoute) {
+        case 'projects': root.innerHTML = renderProjectsView(); break;
+        case 'events': root.innerHTML = renderEventsView(); break;
+        case 'people': root.innerHTML = renderPeopleView(); break;
+        case 'achievements': root.innerHTML = renderAchievementsView(); break;
+        case 'gallery': root.innerHTML = renderGalleryView(); break;
+        case 'about': root.innerHTML = renderAboutView(); break;
+        case 'join': root.innerHTML = renderJoinView(); break;
+        default: root.innerHTML = renderHomeView(); break;
+      }
+    }
+
+    /* ===================================================================== */
+    /* INTERACTIVE MODALS (Project, Event, Registration, Member, Gallery)    */
+    /* ===================================================================== */
+    function showModal(innerHtml) {
+      const backdrop = document.getElementById('modal-backdrop');
+      const box = document.getElementById('modal-box');
+      box.innerHTML = innerHtml;
+      backdrop.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const backdrop = document.getElementById('modal-backdrop');
+      backdrop.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'modal-backdrop') closeModal();
+    }
+
+    function openProjectModal(projectId) {
+      const p = CORE_DATA.projects.find(item => item.id === projectId);
+      if (!p) return;
+      showModal(`
+        <div class="p-6 sm:p-7 space-y-5">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <span class="text-xs font-mono text-cyan-400">${p.category} â€¢ ${p.status}</span>
+              <h2 class="text-2xl font-bold text-white mt-1">${p.title}</h2>
+            </div>
+            <button onclick="closeModal()" class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 min-w-[36px] min-h-[36px] flex items-center justify-center" aria-label="Close"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+          </div>
+
+          <div class="rounded-xl overflow-hidden border border-gray-800 aspect-video">
+            ${renderProjectVisual(p.visualType)}
+          </div>
+
+          <p class="text-sm text-gray-300 leading-relaxed">${p.fullDesc}</p>
+
+          <div>
+            <h3 class="text-xs font-mono uppercase tracking-wider text-gray-400 mb-2">Technology Stack</h3>
+            <div class="flex flex-wrap gap-2">
+              ${p.technologies.map(t => `<span class="px-3 py-1 rounded-lg text-xs font-mono bg-[#0B0F17] text-cyan-300 border border-gray-800">${t}</span>`).join('')}
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-mono uppercase tracking-wider text-gray-400 mb-2">Project Lead & Contributors</h3>
+            <div class="flex flex-wrap gap-2">
+              ${p.contributors.map(c => `<span class="px-3 py-1 rounded-full text-xs bg-gray-800/90 text-gray-200 border border-gray-700">${c === p.lead ? '<span class="inline-flex items-center gap-1"><svg class="w-3 h-3 text-amber-400 shrink-0 inline" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span>' + c + ' (Lead)</span></span>' : c}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-gray-800 flex flex-wrap items-center justify-end gap-3">
+            <a href="${p.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn-secondary px-4 py-2.5 rounded-xl text-xs font-semibold">
+              View Source on GitHub <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+            ${p.liveUrl ? `<a href="${p.liveUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold">Open Live Deployment <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a>` : ''}
+          </div>
+        </div>
+      `);
+    }
+
+    function openEventModal(eventId) {
+      const ev = CORE_DATA.events.find(item => item.id === eventId);
+      if (!ev) return;
+      showModal(`
+        <div class="p-6 sm:p-7 space-y-5">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <span class="text-xs font-mono text-violet-400">${ev.series} â€¢ ${ev.fullDate}</span>
+              <h2 class="text-xl sm:text-2xl font-bold text-white mt-1">${ev.title}</h2>
+            </div>
+            <button onclick="closeModal()" class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 min-w-[36px] min-h-[36px] flex items-center justify-center" aria-label="Close modal"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+          </div>
+
+          <p class="text-sm text-gray-300 leading-relaxed">${ev.summary}</p>
+
+          <div class="p-4 rounded-xl bg-[#0B0F17] border border-gray-800 space-y-2.5">
+            <div class="text-xs font-mono uppercase text-cyan-400">Schedule</div>
+            ${ev.schedule.map(s => `
+              <div class="flex gap-3 text-xs">
+                <span class="font-mono text-gray-400 w-28 shrink-0">${s.time}</span>
+                <span class="text-gray-200">${s.title}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="space-y-2">
+            <div class="text-xs font-mono uppercase text-gray-400">Guidelines & Rules</div>
+            <ul class="list-disc list-inside text-xs text-gray-300 space-y-1.5">
+              ${ev.rules.map(r => `<li>${r}</li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="pt-4 border-t border-gray-800 flex justify-end gap-3">
+            <button onclick="closeModal()" class="btn-secondary px-4 py-2.5 rounded-xl text-xs font-semibold">Close</button>
+            ${ev.status === 'Registration Open' ? `<button onclick="openRegisterModal('${ev.id}')" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold">Proceed to Register</button>` : ''}
+          </div>
+        </div>
+      `);
+    }
+
+    function openRegisterModal(eventId) {
+      const ev = CORE_DATA.events.find(item => item.id === eventId);
+      if (!ev) return;
+
+      if (state.registeredEventIds.has(ev.id)) {
+        showModal(`
+          <div class="p-6 sm:p-8 text-center space-y-4">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto"><svg class="w-7 h-7 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <h2 class="text-2xl font-bold text-white">Registration Confirmed</h2>
+            <p class="text-sm text-gray-400">You are registered for <strong class="text-white">${ev.title}</strong>.</p>
+            <div class="p-4 rounded-xl bg-[#0B0F17] border border-dashed border-cyan-500/40 font-mono text-xs text-left space-y-1.5 max-w-sm mx-auto">
+              <div class="text-cyan-400">PASS ID: CORE-${ev.id.toUpperCase().slice(4, 10)}-2026</div>
+              <div class="text-gray-300">Venue: ${ev.venue}</div>
+              <div class="text-gray-400">Check-in: Rotating QR verified at entry</div>
+            </div>
+            <button onclick="closeModal()" class="btn-primary px-6 py-2.5 rounded-xl text-xs font-semibold mt-2">Done</button>
+          </div>
+        `);
+        return;
+      }
+
+      showModal(`
+        <form onsubmit="submitEventRegistration(event, '${ev.id}')" novalidate class="p-6 sm:p-7 space-y-4">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <span class="text-xs font-mono text-emerald-400">Event Registration</span>
+              <h2 class="text-xl font-bold text-white mt-0.5">${ev.title}</h2>
+            </div>
+            <button type="button" onclick="closeModal()" class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 min-w-[36px] min-h-[36px] flex items-center justify-center" aria-label="Close registration modal"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Student Name *</label>
+              <input id="reg-name" type="text" required placeholder="Your full name" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-cyan-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Email Address *</label>
+              <input id="reg-email" type="email" required placeholder="student@vcetputtur.ac.in" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-cyan-500" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Team Name (if applicable)</label>
+              <input id="reg-team" type="text" placeholder="e.g., Binary Builders" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm text-white focus:outline-none focus:border-cyan-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">GitHub Handle</label>
+              <input id="reg-gh" type="text" placeholder="github-username" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F17] border border-gray-700 text-sm font-mono text-white focus:outline-none focus:border-cyan-500" />
+            </div>
+          </div>
+
+          <p id="reg-error" class="hidden text-xs text-rose-400"></p>
+
+          <div class="pt-3 border-t border-gray-800 flex justify-end gap-3">
+            <button type="button" onclick="closeModal()" class="btn-secondary px-4 py-2.5 rounded-xl text-xs font-semibold">Cancel</button>
+            <button type="submit" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold">Confirm Registration</button>
+          </div>
+        </form>
+      `);
+    }
+
+    function submitEventRegistration(e, eventId) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const errEl = document.getElementById('reg-error');
+
+      if (name.length < 2 || !email.includes('@')) {
+        errEl.textContent = 'Validation Error (Zod): Please enter a valid name and email address.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      const ev = CORE_DATA.events.find(item => item.id === eventId);
+      if (ev && !state.registeredEventIds.has(eventId)) {
+        state.registeredEventIds.add(eventId);
+        ev.registered = Math.min(ev.capacity, ev.registered + 1);
+      }
+
+      showToast(`Registered for ${ev.series}! Digital pass generated.`);
+      renderCurrentView();
+      openRegisterModal(eventId);
+    }
+
+    function openMemberModal(memberId) {
+      const m = CORE_DATA.members.find(item => item.id === memberId);
+      if (!m) return;
+      showModal(`
+        <div class="p-6 sm:p-7 space-y-5">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl bg-[#1E293B] border border-[#334155] text-[#38BDF8] flex items-center justify-center font-extrabold text-white text-2xl">
+                ${m.name.slice(0, 2).toUpperCase()}
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold text-white">${m.name}</h2>
+                <p class="text-sm text-cyan-400 font-medium">${m.role}</p>
+                <p class="text-xs font-mono text-gray-400 mt-0.5">${m.batch} â€¢ @${m.github}</p>
+              </div>
+            </div>
+            <button onclick="closeModal()" class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 min-w-[36px] min-h-[36px] flex items-center justify-center" aria-label="Close member modal"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+          </div>
+
+          <p class="text-sm text-gray-300 leading-relaxed">${m.bio}</p>
+
+          <div>
+            <h3 class="text-xs font-mono uppercase text-gray-400 mb-2">Skills & Stack</h3>
+            <div class="flex flex-wrap gap-2">
+              ${m.skills.map(s => `<span class="px-3 py-1 rounded-lg text-xs font-mono bg-[#0B0F17] text-gray-200 border border-gray-800">${s}</span>`).join('')}
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-mono uppercase text-gray-400 mb-2">Verified CoRE Projects</h3>
+            <ul class="space-y-1.5 text-sm text-cyan-300">
+              ${m.projects.map(proj => `<li>â€¢ ${proj}</li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="pt-4 border-t border-gray-800 flex items-center justify-between">
+            <span class="text-xs font-mono text-gray-500">Privacy-safe public view (PRD Â§7.1)</span>
+            <a href="https://github.com/${m.github}" target="_blank" rel="noopener noreferrer" class="btn-secondary px-4 py-2 rounded-xl text-xs font-semibold">
+              GitHub Profile <svg class="w-3.5 h-3.5 inline ml-1 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+          </div>
+        </div>
+      `);
+    }
+
+    function openGalleryModal(galId) {
+      const g = CORE_DATA.gallery.find(item => item.id === galId);
+      if (!g) return;
+      showModal(`
+        <div class="overflow-hidden">
+          ${renderGalleryIllustration(g)}
+          <div class="p-6 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-cyan-400">${g.album} â€¢ ${g.date}</span>
+              <button onclick="closeModal()" class="text-xs font-mono text-gray-400 hover:text-white inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg><span>Close</span></button>
+            </div>
+            <h2 class="text-xl font-bold text-white">${g.title}</h2>
+            <p class="text-sm text-gray-300 leading-relaxed">${g.caption}</p>
+          </div>
+        </div>
+      `);
+    }
+
+    /* Join CoRE Form Validation & Submission */
+    function handleJoinSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('join-name').value.trim();
+      const email = document.getElementById('join-email').value.trim();
+      const why = document.getElementById('join-why').value.trim();
+
+      const errName = document.getElementById('err-join-name');
+      const errEmail = document.getElementById('err-join-email');
+      const errWhy = document.getElementById('err-join-why');
+
+      [errName, errEmail, errWhy].forEach(el => el.classList.add('hidden'));
+      let valid = true;
+
+      if (name.length < 2) {
+        errName.textContent = 'Name must be at least 2 characters.';
+        errName.classList.remove('hidden');
+        valid = false;
+      }
+      if (!email.includes('@') || !email.includes('.')) {
+        errEmail.textContent = 'Please provide a valid email address.';
+        errEmail.classList.remove('hidden');
+        valid = false;
+      }
+      if (why.length < 15) {
+        errWhy.textContent = 'Please share at least 15 characters about what you want to build or learn.';
+        errWhy.classList.remove('hidden');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      showToast(`Application received for ${name}! CoRE leads will review your onboarding soon.`);
+      e.target.reset();
+    }
+
+    /* Toast Notification Helper */
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto p-4 rounded-xl bg-[#111827] border border-cyan-500/40 shadow-2xl text-xs text-white flex items-center justify-between gap-3';
+      toast.innerHTML = `
+        <div class="flex items-center gap-2.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+          <span>${message}</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-white p-1 rounded-md hover:bg-white/10" aria-label="Dismiss toast"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 5000);
+    }
+
+    /* Keyboard Escape Handler & Initial Hash Boot */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        toggleReferenceDrawer(false);
+      }
+    });
+
+    window.addEventListener('hashchange', () => {
+      const hashRoute = window.location.hash.replace('#', '') || 'home';
+      if (hashRoute !== state.currentRoute) {
+        state.currentRoute = hashRoute;
+        updateActiveNavStyles();
+        renderCurrentView();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const initialRoute = window.location.hash.replace('#', '') || 'home';
+      state.currentRoute = initialRoute;
+      updateActiveNavStyles();
+      renderCurrentView();
+    });
+  </script>
+</body>
+</html>
+

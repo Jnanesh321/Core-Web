@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-hidden="true">
+  <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 60c20-40 80-40 120-10" opacity="0.85"/>
+    <path d="M30 120c30 30 90 30 130-10" opacity="0.6"/>
+    <circle cx="40" cy="40" r="6" fill="currentColor" stroke="none" />
+    <circle cx="160" cy="160" r="6" fill="currentColor" stroke="none" />
+  </g>
+</svg>
