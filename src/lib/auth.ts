@@ -6,6 +6,9 @@ import { RoleName } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { verifyCredentials } from "@/services/auth.service";
 import { AuthUser, loginSchema } from "@/types/auth.schema";
+import { hasAllRoles, hasAnyRole, hasRole } from "@/lib/permissions";
+
+export { hasRole, hasAnyRole, hasAllRoles };
 
 /**
  * Authentication Architecture & Session Strategy Rationale:
@@ -102,6 +105,15 @@ export class AuthError extends Error {
   }
 }
 
+export class ForbiddenError extends Error {
+  statusCode: number;
+  constructor(message = "Forbidden: Insufficient permissions", statusCode = 403) {
+    super(message);
+    this.name = "ForbiddenError";
+    this.statusCode = statusCode;
+  }
+}
+
 /**
  * Returns the current authenticated user or null.
  * Never exposes sensitive student profile data (usn, phone).
@@ -130,4 +142,74 @@ export async function requireAuth(): Promise<AuthUser> {
     throw new AuthError("Authentication required", 401);
   }
   return user;
+}
+
+/**
+ * Asserts that the user possesses all required roles (or implied by hierarchy).
+ * Returns user if authorized; throws AuthError(401) or ForbiddenError(403).
+ */
+export async function requireRole(...roles: RoleName[]): Promise<AuthUser> {
+  const user = await requireAuth();
+  if (!hasAllRoles(user.roles, roles)) {
+    throw new ForbiddenError(
+      `Forbidden: Missing required role(s): ${roles.join(", ")}`
+    );
+  }
+  return user;
+}
+
+/**
+ * Asserts that the user possesses at least one of the specified roles (or implied by hierarchy).
+ * Returns user if authorized; throws AuthError(401) or ForbiddenError(403).
+ */
+export async function requireAnyRole(...roles: RoleName[]): Promise<AuthUser> {
+  const user = await requireAuth();
+  if (!hasAnyRole(user.roles, roles)) {
+    throw new ForbiddenError(
+      `Forbidden: Requires at least one role of: ${roles.join(", ")}`
+    );
+  }
+  return user;
+}
+
+/**
+ * Asserts that the user is an organizer of the specified event, or is ADMIN / SUPER_ADMIN.
+ * Otherwise throws ForbiddenError(403).
+ */
+export async function requireEventOrganizer(eventId: string): Promise<AuthUser> {
+  const user = await requireAuth();
+
+  // ADMIN and SUPER_ADMIN have implicit management rights
+  if (hasRole(user.roles, RoleName.ADMIN)) {
+    return user;
+  }
+
+  const organizer = await prisma.eventOrganizer.findUnique({
+    where: {
+      eventId_userId: {
+        eventId,
+        userId: user.id,
+      },
+    },
+  });
+
+  if (!organizer) {
+    throw new ForbiddenError("Forbidden: You are not an organizer for this event");
+  }
+
+  return user;
+}
+
+/**
+ * Asserts that the authenticated user is the owner of the resource or an ADMIN+.
+ * Otherwise throws ForbiddenError(403).
+ */
+export async function requireOwnerOrAdmin(ownerUserId: string): Promise<AuthUser> {
+  const user = await requireAuth();
+
+  if (user.id === ownerUserId || hasRole(user.roles, RoleName.ADMIN)) {
+    return user;
+  }
+
+  throw new ForbiddenError("Forbidden: Only the owner or an administrator can modify this resource");
 }
