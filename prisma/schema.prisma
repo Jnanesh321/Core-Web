@@ -1,0 +1,649 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum RoleName {
+  STUDENT
+  MEMBER
+  EVENT_ORGANIZER
+  CONTENT_CONTRIBUTOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+  ALUMNI
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  MORE_INFO
+}
+
+enum ProjectStatus {
+  IDEA
+  IN_PROGRESS
+  COMPLETED
+  DEPLOYED
+  ARCHIVED
+}
+
+enum ApprovalStatus {
+  DRAFT
+  PENDING
+  PUBLISHED
+}
+
+enum EventStatus {
+  DRAFT
+  UPCOMING
+  REGISTRATION_OPEN
+  REGISTRATION_CLOSED
+  ONGOING
+  COMPLETED
+  ARCHIVED
+  CANCELLED
+}
+
+enum RegistrationStatus {
+  REGISTERED
+  WAITLISTED
+  CANCELLED
+  ATTENDED
+  NO_SHOW
+}
+
+enum AnnouncementPriority {
+  NORMAL
+  IMPORTANT
+  URGENT
+}
+
+// ==========================================
+// AUTHENTICATION & IDENTITY (Auth.js)
+// ==========================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts           Account[]
+  sessions           Session[]
+  roles              UserRole[]
+  studentProfile     StudentProfile?
+  member             Member?
+  applications       MembershipApplication[]
+  eventOrganizers    EventOrganizer[]
+  eventRegistrations EventRegistration[]
+  teamMembers        TeamMember[]
+  attendances        Attendance[]
+  announcements      Announcement[]
+  auditLogs          AuditLog[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ==========================================
+// STUDENT PROFILE (Private student data)
+// ==========================================
+
+model StudentProfile {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  usn        String   @unique
+  phone      String?
+  department String
+  year       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("student_profiles")
+}
+
+// ==========================================
+// RBAC: ROLES & USER ROLES
+// ==========================================
+
+model Role {
+  id          String   @id @default(cuid())
+  name        RoleName @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userRoles UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+// ==========================================
+// MEMBERSHIP & PUBLIC MEMBER PROFILES
+// ==========================================
+
+model MembershipApplication {
+  id           String            @id @default(cuid())
+  userId       String
+  status       ApplicationStatus @default(PENDING)
+  statement    String?           @db.Text
+  whyJoin      String?           @db.Text
+  portfolioUrl String?
+  adminNotes   String?           @db.Text
+  reviewedById String?
+  reviewedAt   DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("membership_applications")
+}
+
+model Member {
+  id               String           @id @default(cuid())
+  userId           String           @unique
+  username         String           @unique
+  displayName      String
+  bio              String?          @db.Text
+  avatarUrl        String?
+  department       String
+  batchYear        Int
+  membershipStatus MembershipStatus @default(ACTIVE)
+  showEmail        Boolean          @default(false)
+  joinedAt         DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills       MemberSkill[]
+  links        MemberLink[]
+  projects     ProjectContributor[]
+  achievements AchievementMember[]
+
+  @@map("members")
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members MemberSkill[]
+
+  @@map("skills")
+}
+
+model MemberSkill {
+  id          String   @id @default(cuid())
+  memberId    String
+  skillId     String
+  proficiency String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  skill  Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, skillId])
+  @@map("member_skills")
+}
+
+model MemberLink {
+  id        String   @id @default(cuid())
+  memberId  String
+  title     String
+  url       String
+  icon      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("member_links")
+}
+
+// ==========================================
+// PROJECTS & TECHNOLOGIES
+// ==========================================
+
+model Project {
+  id               String         @id @default(cuid())
+  title            String
+  slug             String         @unique
+  shortDescription String
+  fullDescription  String?        @db.Text
+  category         String?
+  status           ProjectStatus  @default(IDEA)
+  approvalStatus   ApprovalStatus @default(DRAFT)
+  featured         Boolean        @default(false)
+  githubUrl        String?
+  deploymentUrl    String?
+  bannerUrl        String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  contributors ProjectContributor[]
+  technologies ProjectTechnology[]
+
+  @@index([approvalStatus, featured])
+  @@map("projects")
+}
+
+model ProjectContributor {
+  id        String   @id @default(cuid())
+  projectId String
+  memberId  String
+  role      String?
+  isLead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  member  Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, memberId])
+  @@map("project_contributors")
+}
+
+model Technology {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  icon      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects ProjectTechnology[]
+
+  @@map("technologies")
+}
+
+model ProjectTechnology {
+  id           String   @id @default(cuid())
+  projectId    String
+  technologyId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  technology Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, technologyId])
+  @@map("project_technologies")
+}
+
+// ==========================================
+// EVENTS, REGISTRATIONS & ATTENDANCE
+// ==========================================
+
+model EventSeries {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?  @db.Text
+  logoUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  events Event[]
+
+  @@map("event_series")
+}
+
+model Event {
+  id                   String      @id @default(cuid())
+  seriesId             String?
+  title                String
+  slug                 String      @unique
+  tagLine              String?
+  description          String?     @db.Text
+  location             String?
+  isOnline             Boolean     @default(false)
+  startAt              DateTime
+  endAt                DateTime
+  registrationDeadline DateTime?
+  capacity             Int?
+  bannerUrl            String?
+  status               EventStatus @default(DRAFT)
+  eligibility          String?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  series        EventSeries?        @relation(fields: [seriesId], references: [id], onDelete: SetNull)
+  schedule      EventScheduleItem[]
+  rules         EventRule[]
+  organizers    EventOrganizer[]
+  registrations EventRegistration[]
+  teams         Team[]
+  attendances   Attendance[]
+  announcements Announcement[]
+  albums        Album[]
+
+  @@index([status, startAt])
+  @@map("events")
+}
+
+model EventScheduleItem {
+  id          String   @id @default(cuid())
+  eventId     String
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  speaker     String?
+  room        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("event_schedule_items")
+}
+
+model EventRule {
+  id        String   @id @default(cuid())
+  eventId   String
+  rule      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("event_rules")
+}
+
+model EventOrganizer {
+  id        String   @id @default(cuid())
+  eventId   String
+  userId    String
+  role      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@map("event_organizers")
+}
+
+model EventRegistration {
+  id            String             @id @default(cuid())
+  eventId       String
+  userId        String
+  teamId        String?
+  status        RegistrationStatus @default(REGISTERED)
+  customAnswers Json?
+  registeredAt  DateTime           @default(now())
+  attendedAt    DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team  Team? @relation(fields: [teamId], references: [id], onDelete: SetNull)
+
+  @@unique([eventId, userId])
+  @@index([eventId, status])
+  @@map("event_registrations")
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  eventId   String
+  name      String
+  code      String?
+  leaderId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event         Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  members       TeamMember[]
+  registrations EventRegistration[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  teamId    String
+  userId    String
+  role      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@map("team_members")
+}
+
+model Attendance {
+  id           String   @id @default(cuid())
+  eventId      String
+  userId       String
+  sessionId    String?
+  verifiedById String?
+  markedAt     DateTime @default(now())
+  method       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("attendances")
+}
+
+// ==========================================
+// ACHIEVEMENTS
+// ==========================================
+
+model Achievement {
+  id           String    @id @default(cuid())
+  title        String
+  slug         String    @unique
+  description  String?   @db.Text
+  proofUrl     String?
+  issuer       String?
+  date         DateTime?
+  verified     Boolean   @default(false)
+  verifiedById String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  members AchievementMember[]
+
+  @@map("achievements")
+}
+
+model AchievementMember {
+  id            String   @id @default(cuid())
+  achievementId String
+  memberId      String
+  role          String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  member      Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([achievementId, memberId])
+  @@map("achievement_members")
+}
+
+// ==========================================
+// ANNOUNCEMENTS & MEDIA
+// ==========================================
+
+model Announcement {
+  id          String               @id @default(cuid())
+  title       String
+  slug        String               @unique
+  content     String               @db.Text
+  priority    AnnouncementPriority @default(NORMAL)
+  published   Boolean              @default(false)
+  publishedAt DateTime?
+  authorId    String?
+  eventId     String?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  author User?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  event  Event? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  @@map("announcements")
+}
+
+model Album {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?  @db.Text
+  coverUrl    String?
+  eventId     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  event Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  media Media[]
+
+  @@map("albums")
+}
+
+model Media {
+  id         String   @id @default(cuid())
+  albumId    String?
+  title      String?
+  url        String
+  type       String?
+  publicId   String?
+  uploaderId String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  album Album? @relation(fields: [albumId], references: [id], onDelete: SetNull)
+
+  @@map("media")
+}
+
+// ==========================================
+// SITE SETTINGS & AUDIT LOGS
+// ==========================================
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  description String?
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
