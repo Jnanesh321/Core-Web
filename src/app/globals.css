@@ -33,3 +33,18 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Reduced motion: display static skeleton */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer::before {
+    animation: none !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+}

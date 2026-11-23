@@ -39,6 +39,16 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-inter)", "Arial", "sans-serif"],
       },
+      animation: {
+        shimmer: "shimmer 1.8s infinite",
+      },
+      keyframes: {
+        shimmer: {
+          "100%": {
+            transform: "translateX(100%)",
+          },
+        },
+      },
     },
   },
   plugins: [],
