@@ -24,7 +24,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} min-h-screen bg-canvas text-text-high antialiased`}
       >
-        {children}
+        <div id="app-root">{children}</div>
       </body>
     </html>
   );

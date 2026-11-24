@@ -11,9 +11,11 @@ const config: Config = {
       colors: {
         canvas: "#0B0F17",
         surface: "#111827",
+        "surface-1": "#111827",
         elevated: "#1E293B",
         border: "#1F2937",
         "border-strong": "#374151",
+        line: "#1F2937",
 
         brand: {
           cyan: "#06B6D4",
