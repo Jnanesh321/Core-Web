@@ -1,3 +1,7 @@
+
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -15,7 +19,28 @@ import { Input, Textarea, Select, FormField } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 
+import {
+  CardGridSkeleton,
+  PageHeaderSkeleton,
+  DetailPageSkeleton,
+  ListSkeleton,
+} from "@/components/ui/LoadingSkeleton";
+
+import {
+  NoUpcomingEvents,
+  NoProjects,
+  NoPeople,
+  NoAchievements,
+  NoPhotos,
+  NoResults,
+} from "@/components/ui/EmptyStates";
+
+import { ErrorState } from "@/components/ui/ErrorState";
+
 export default function UIShowcasePage() {
+  const [demoMessage, setDemoMessage] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+
   return (
     <main className="min-h-screen space-y-12 bg-canvas p-8 text-text-high">
       <header>
@@ -56,7 +81,9 @@ export default function UIShowcasePage() {
           <Button loading>Loading</Button>
           <Button disabled>Disabled</Button>
           <Button leftIcon={<Plus size={16} />}>Add Project</Button>
-          <Button rightIcon={<ArrowRight size={16} />}>Continue</Button>
+          <Button rightIcon={<ArrowRight size={16} />}>
+            Continue
+          </Button>
         </div>
       </section>
 
@@ -156,7 +183,7 @@ export default function UIShowcasePage() {
         </Select>
       </section>
 
-      {/* Skeleton */}
+      {/* Existing Skeleton */}
       <section className="max-w-xl space-y-4">
         <h2 className="text-xl font-semibold">Skeleton</h2>
 
@@ -176,7 +203,83 @@ export default function UIShowcasePage() {
         </div>
       </section>
 
-      {/* EmptyState */}
+      {/* Card Grid Skeleton presets */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold">Card Grid Skeletons</h2>
+
+        <div className="space-y-3">
+          <h3 className="text-lg font-medium">Project Cards</h3>
+          <div className="rounded-xl border border-border-strong bg-surface p-5">
+            <CardGridSkeleton
+              variant="project"
+              count={3}
+              columns={3}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-lg font-medium">Event Cards</h3>
+          <div className="rounded-xl border border-border-strong bg-surface p-5">
+            <CardGridSkeleton
+              variant="event"
+              count={3}
+              columns={3}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-lg font-medium">Member Cards</h3>
+          <div className="rounded-xl border border-border-strong bg-surface p-5">
+            <CardGridSkeleton
+              variant="member"
+              count={3}
+              columns={3}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-lg font-medium">Album Cards</h3>
+          <div className="rounded-xl border border-border-strong bg-surface p-5">
+            <CardGridSkeleton
+              variant="album"
+              count={3}
+              columns={3}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Page Header Skeleton */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Page Header Skeleton</h2>
+
+        <div className="rounded-xl border border-border-strong bg-surface p-5">
+          <PageHeaderSkeleton />
+        </div>
+      </section>
+
+      {/* Detail Page Skeleton */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Detail Page Skeleton</h2>
+
+        <div className="rounded-xl border border-border-strong bg-surface p-5">
+          <DetailPageSkeleton />
+        </div>
+      </section>
+
+      {/* List Skeleton */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">List Skeleton</h2>
+
+        <div className="rounded-xl border border-border-strong bg-surface p-5">
+          <ListSkeleton rows={4} />
+        </div>
+      </section>
+
+      {/* Existing EmptyState */}
       <section className="space-y-4">
         <h2 className="text-xl font-semibold">EmptyState</h2>
 
@@ -190,6 +293,102 @@ export default function UIShowcasePage() {
               href: "/",
             }}
           />
+        </div>
+      </section>
+
+      {/* Empty State Presets */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold">Empty State Presets</h2>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="rounded-xl border border-border-strong bg-surface">
+            <NoUpcomingEvents
+              onBrowsePastEvents={() =>
+                setDemoMessage("Browse past events action clicked.")
+              }
+            />
+          </div>
+
+          <div className="rounded-xl border border-border-strong bg-surface">
+            <NoProjects
+              onExploreProjects={() =>
+                setDemoMessage("Explore projects action clicked.")
+              }
+            />
+          </div>
+
+          <div className="rounded-xl border border-border-strong bg-surface">
+            <NoPeople
+              onBrowseMembers={() =>
+                setDemoMessage("Browse members action clicked.")
+              }
+            />
+          </div>
+
+          <div className="rounded-xl border border-border-strong bg-surface">
+            <NoAchievements
+              onViewAchievements={() =>
+                setDemoMessage("View achievements action clicked.")
+              }
+            />
+          </div>
+
+          <div className="rounded-xl border border-border-strong bg-surface">
+            <NoPhotos
+              onViewGallery={() =>
+                setDemoMessage("View gallery action clicked.")
+              }
+            />
+          </div>
+
+          <div className="rounded-xl border border-border-strong bg-surface">
+            <NoResults
+              onClear={() => {
+                setShowSearchResults(false);
+                setDemoMessage("Filters cleared.");
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Error State */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Error State</h2>
+
+        <div className="rounded-xl border border-border-strong bg-surface">
+          <ErrorState
+            title="Unable to load projects"
+            description="Something went wrong while loading projects. Please try again."
+            onRetry={() => setDemoMessage("Retry action clicked.")}
+          />
+        </div>
+      </section>
+
+      {/* Action Demo */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Preset Action Demo</h2>
+
+        <div className="rounded-xl border border-border-strong bg-surface p-5">
+          <Button
+            variant="secondary"
+            onClick={() => setShowSearchResults(true)}
+          >
+            Show search results state
+          </Button>
+
+          {showSearchResults && (
+            <p className="mt-3 text-sm text-text-muted">
+              Search results state is active. Use the NoResults Clear
+              button above to reset it.
+            </p>
+          )}
+
+          {demoMessage && (
+            <p className="mt-3 text-sm text-text-muted" role="status">
+              {demoMessage}
+            </p>
+          )}
         </div>
       </section>
     </main>
